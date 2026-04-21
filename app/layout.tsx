@@ -60,9 +60,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${geistSans.variable} h-full antialiased`}>
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon.svg" />
+        <link rel="apple-touch-icon" href="/pin-gold.png" />
       </head>
-      <body className="min-h-full bg-stone-50 text-stone-900 font-sans">
+      <body
+        suppressHydrationWarning
+        className="min-h-full bg-stone-50 text-stone-900 font-sans"
+      >
         {children}
       </body>
     </html>
