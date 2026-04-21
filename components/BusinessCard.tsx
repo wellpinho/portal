@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   MapPin,
   Star,
-  MessageCircle,
   Crown,
   ChevronsRight,
   MessageCircleMore,

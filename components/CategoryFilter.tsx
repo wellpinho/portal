@@ -86,44 +86,45 @@ export default function CategoryFilter({
   return (
     <>
       <div className="flex items-center gap-2">
-        {/* ── Chips primários — apenas no desktop ── */}
-        <div
-          className="hidden sm:flex flex-1 min-w-0 gap-2 overflow-x-auto pb-1 scrollbar-hide"
-          role="tablist"
-          aria-label="Filtrar por categoria"
-        >
-          {PRIMARY_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              role="tab"
-              aria-selected={selected === cat}
-              onClick={() => handleSelect(cat)}
-              className={[
-                "shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all touch-manipulation",
-                selected === cat
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 active:bg-stone-100",
-              ].join(" ")}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        {/* ── Chips primários — apenas no desktop, irmãos do botão Mais ── */}
+        {PRIMARY_CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            role="tab"
+            aria-selected={selected === cat}
+            onClick={() => handleSelect(cat)}
+            className={[
+              "hidden sm:flex shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all touch-manipulation cursor-pointer",
+              selected === cat
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 active:bg-stone-100",
+            ].join(" ")}
+          >
+            {cat}
+          </button>
+        ))}
 
-        {/* ── Botão Menu — sempre visível ── */}
+        {/* ── Botão Mais/Menu — sempre visível, inline com os chips ── */}
         <div ref={dropdownRef} className="relative shrink-0 pb-1">
           <button
             aria-haspopup="dialog"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
             className={[
-              "flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all touch-manipulation",
+              "flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all touch-manipulation cursor-pointer",
               extraIsSelected
                 ? "bg-emerald-600 text-white shadow-sm"
                 : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 active:bg-stone-100",
             ].join(" ")}
           >
-            {extraIsSelected ? selected : "Menu"}
+            {extraIsSelected ? (
+              selected
+            ) : (
+              <>
+                <span className="md:hidden">Menu</span>
+                <span className="hidden md:inline">Mais categorias</span>
+              </>
+            )}
             <ChevronDown
               className={[
                 "w-3.5 h-3.5 transition-transform duration-200",
@@ -147,7 +148,7 @@ export default function CategoryFilter({
                     key={cat}
                     onClick={() => handleSelect(cat)}
                     className={[
-                      "w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors touch-manipulation",
+                      "w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors touch-manipulation cursor-pointer",
                       selected === cat
                         ? "bg-emerald-50 text-emerald-700 font-semibold"
                         : "text-stone-700 hover:bg-stone-50 active:bg-stone-100",

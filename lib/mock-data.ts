@@ -6,15 +6,16 @@ export const PRIMARY_CATEGORIES: Category[] = [
   "Produtos Coloniais",
   "Gastronomia",
   "Serviços",
+  "Casa",
+  "Moda & Beleza",
   "Saúde",
 ];
 
 /** Categorias agrupadas no botão "Mais" */
 export const EXTRA_CATEGORIES: Category[] = [
-  "Casa",
   "Carro",
   "Construção",
-  "Moda & Beleza",
+
   "Educação",
   "Turismo",
   "Agropecuária",

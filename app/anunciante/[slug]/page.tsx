@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import { getBusinessBySlug } from "@/lib/mock-data";
+import { DEFAULT_CITY_PATH } from "@/lib/locations";
 
 type AdvertiserPageProps = {
   params: Promise<{ slug: string }>;
@@ -53,7 +54,7 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
             O perfil solicitado não existe ou foi removido.
           </p>
           <Link
-            href="/"
+            href={DEFAULT_CITY_PATH}
             className="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-600 text-white px-4 py-3 font-semibold"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
@@ -71,7 +72,7 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
       <main className="max-w-3xl mx-auto pb-12">
         <div className="px-4 pt-4">
           <Link
-            href="/"
+            href={DEFAULT_CITY_PATH}
             className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
