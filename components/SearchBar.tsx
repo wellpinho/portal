@@ -1,41 +1,78 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 
 interface SearchBarProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
+  searchValue: string;
+  onSearchChange: (value: string) => void;
+  neighborhoodValue: string;
+  onNeighborhoodChange: (value: string) => void;
+  neighborhoods: string[];
+  searchPlaceholder?: string;
 }
 
 export default function SearchBar({
-  value,
-  onChange,
-  placeholder = "Buscar comércio, serviço ou produto...",
+  searchValue,
+  onSearchChange,
+  neighborhoodValue,
+  onNeighborhoodChange,
+  neighborhoods,
+  searchPlaceholder = "Pesquisar o nome",
 }: SearchBarProps) {
   return (
-    <div className="relative flex items-center">
-      <Search
-        className="absolute left-3.5 w-5 h-5 text-stone-400 pointer-events-none"
-        aria-hidden="true"
-      />
-      <input
-        type="search"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full h-12 pl-11 pr-10 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder-stone-400 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
-        aria-label="Buscar estabelecimento"
-      />
-      {value && (
-        <button
-          onClick={() => onChange("")}
-          className="absolute right-3 text-stone-400 hover:text-stone-600 touch-manipulation p-1"
-          aria-label="Limpar busca"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      )}
+    <div className="rounded-xl border border-stone-200 bg-white transition-shadow focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-1">
+      <div className="flex flex-col sm:flex-row sm:items-stretch">
+        <div className="relative flex-1">
+          <input
+            type="search"
+            value={searchValue}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder={searchPlaceholder}
+            className="h-12 w-full rounded-t-xl px-4 pr-16 text-sm text-stone-900 placeholder-stone-400 outline-none sm:rounded-none sm:rounded-l-xl"
+            aria-label="Pesquisar o nome"
+          />
+
+          {searchValue ? (
+            <button
+              onClick={() => onSearchChange("")}
+              className="absolute right-10 top-1/2 -translate-y-1/2 rounded-md p-1 text-stone-400 transition-colors hover:text-stone-600"
+              aria-label="Limpar busca"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          ) : null}
+
+          <Search
+            className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400"
+            aria-hidden="true"
+          />
+        </div>
+
+        <div
+          className="border-t border-stone-200 sm:border-l sm:border-t-0"
+          aria-hidden="true"
+        />
+
+        <div className="relative sm:w-64">
+          <select
+            value={neighborhoodValue}
+            onChange={(e) => onNeighborhoodChange(e.target.value)}
+            className="h-12 w-full appearance-none rounded-b-xl bg-white px-4 pr-10 text-sm text-stone-700 outline-none sm:rounded-none sm:rounded-r-xl"
+            aria-label="Selecione o bairro"
+          >
+            <option value="Todos os bairros">Selecione o Bairro</option>
+            {neighborhoods.map((neighborhood) => (
+              <option key={neighborhood} value={neighborhood}>
+                {neighborhood}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
     </div>
   );
 }

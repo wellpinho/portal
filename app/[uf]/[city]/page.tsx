@@ -37,7 +37,10 @@ export default async function CityPage({ params }: CityPageProps) {
     notFound();
   }
 
-  const businesses = await getBusinessesByLocation(cityRoute.uf, cityRoute.citySlug);
+  const businesses = await getBusinessesByLocation(
+    cityRoute.uf,
+    cityRoute.citySlug,
+  );
 
   return (
     <div className="flex min-h-screen flex-col">

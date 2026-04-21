@@ -17,22 +17,42 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ businesses }: HomePageClientProps) {
   const [search, setSearch] = useState("");
+  const [selectedNeighborhood, setSelectedNeighborhood] =
+    useState("Todos os bairros");
   const [selectedCategory, setSelectedCategory] = useState<Category>("Todos");
+
+  const neighborhoods = useMemo(() => {
+    const values = new Set<string>();
+
+    for (const business of businesses) {
+      const [neighborhood] = business.location
+        .split(",")
+        .map((part) => part.trim());
+      if (neighborhood) values.add(neighborhood);
+    }
+
+    return Array.from(values).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  }, [businesses]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     return businesses.filter((b) => {
       const matchesCategory =
         selectedCategory === "Todos" || b.category === selectedCategory;
+
+      const businessNeighborhood = b.location.split(",")[0]?.trim() ?? "";
+      const matchesNeighborhood =
+        selectedNeighborhood === "Todos os bairros" ||
+        businessNeighborhood === selectedNeighborhood;
+
       const matchesSearch =
         !q ||
         b.name.toLowerCase().includes(q) ||
-        b.category.toLowerCase().includes(q) ||
-        b.location.toLowerCase().includes(q) ||
-        b.description.toLowerCase().includes(q);
-      return matchesCategory && matchesSearch;
+        b.category.toLowerCase().includes(q);
+
+      return matchesCategory && matchesNeighborhood && matchesSearch;
     });
-  }, [businesses, search, selectedCategory]);
+  }, [businesses, search, selectedCategory, selectedNeighborhood]);
 
   const featured = filtered.filter((b) => b.isFeatured);
   const common = filtered.filter((b) => !b.isFeatured);
@@ -45,7 +65,13 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
     <main className="max-w-7xl mx-auto w-full px-4 pb-10">
       {/* Sticky search + filters */}
       <div className="sticky top-16 z-40 bg-stone-50 pt-3 pb-3 space-y-2.5 -mx-4 px-4 border-b border-stone-100">
-        <SearchBar value={search} onChange={setSearch} />
+        <SearchBar
+          searchValue={search}
+          onSearchChange={setSearch}
+          neighborhoodValue={selectedNeighborhood}
+          onNeighborhoodChange={setSelectedNeighborhood}
+          neighborhoods={neighborhoods}
+        />
         <CategoryFilter
           selected={selectedCategory}
           onSelect={setSelectedCategory}
