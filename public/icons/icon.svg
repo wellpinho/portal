@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#059669"/>
+  <rect x="80" y="180" width="352" height="240" rx="20" fill="white" opacity="0.15"/>
+  <path d="M256 80 L340 160 H172 Z" fill="white" opacity="0.9"/>
+  <rect x="120" y="160" width="272" height="220" rx="12" fill="white" opacity="0.9"/>
+  <rect x="168" y="240" width="72" height="90" rx="8" fill="#059669"/>
+  <rect x="272" y="240" width="72" height="60" rx="8" fill="#d97706"/>
+  <text x="256" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="60" font-weight="900" fill="white">ComLoc</text>
+</svg>

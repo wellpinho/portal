@@ -1,0 +1,33 @@
+{
+  "name": "Comércios Locais",
+  "short_name": "ComLoc",
+  "description": "O marketplace de proximidade de Águas Mornas e região.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafaf9",
+  "theme_color": "#059669",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "categories": ["shopping", "local", "business"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "screenshots": [],
+  "related_applications": []
+}
