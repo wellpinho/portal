@@ -96,7 +96,7 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
               Todos os Comércios
             </h2>
           )}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {common.map((b) => (
               <BusinessCard key={b.id} business={b} />
             ))}
