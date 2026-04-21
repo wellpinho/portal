@@ -11,9 +11,13 @@ import { Business } from "@/lib/types";
 
 interface BusinessCardProps {
   business: Business;
+  priority?: boolean;
 }
 
-export default function BusinessCard({ business }: BusinessCardProps) {
+export default function BusinessCard({
+  business,
+  priority = false,
+}: BusinessCardProps) {
   const {
     name,
     category,
@@ -42,9 +46,10 @@ export default function BusinessCard({ business }: BusinessCardProps) {
           src={imageUrl}
           alt={name}
           fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover"
-          unoptimized
+          priority={priority}
+          fetchPriority={priority ? "high" : "auto"}
         />
 
         {/* Featured badge */}
@@ -76,10 +81,10 @@ export default function BusinessCard({ business }: BusinessCardProps) {
 
         <div className="flex items-center gap-1 mt-0.5">
           <MapPin
-            className="w-3 h-3 text-stone-400 shrink-0"
+            className="w-3 h-3 text-stone-600 shrink-0"
             aria-hidden="true"
           />
-          <span className="text-xs text-stone-500 truncate">{location}</span>
+          <span className="text-xs text-stone-600 truncate">{location}</span>
         </div>
 
         {/* Rating */}
@@ -91,7 +96,7 @@ export default function BusinessCard({ business }: BusinessCardProps) {
           <span className="text-xs font-semibold text-stone-700">
             {rating.toFixed(1)}
           </span>
-          <span className="text-xs text-stone-400">({reviewCount})</span>
+          <span className="text-xs text-stone-600">({reviewCount})</span>
         </div>
 
         <div className="flex gap-2">

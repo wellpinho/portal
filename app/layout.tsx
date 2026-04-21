@@ -1,17 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: "#059669",
 };
 
@@ -66,6 +66,21 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full bg-stone-50 text-stone-900 font-sans"
       >
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js')
+                  .then(function (registration) {
+                    console.log('[SW] Registrado com sucesso:', registration.scope);
+                  })
+                  .catch(function (error) {
+                    console.error('[SW] Erro ao registrar:', error);
+                  });
+              });
+            }
+          `}
+        </Script>
         {children}
       </body>
     </html>

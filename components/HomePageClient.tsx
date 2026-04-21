@@ -81,7 +81,7 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
       {/* Empty state */}
       {filtered.length === 0 && (
         <section className="mx-auto flex max-w-lg flex-col items-center justify-center gap-4 py-20 text-center">
-          <Store className="h-14 w-14 text-stone-400" aria-hidden="true" />
+          <Store className="h-14 w-14 text-stone-600" aria-hidden="true" />
 
           <div className="w-full rounded-3xl border border-blue-100 bg-blue-50 px-5 py-6 shadow-sm sm:px-7">
             <p className="text-lg font-semibold leading-snug text-stone-900">
@@ -132,8 +132,8 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
             Em Destaque
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {featured.map((b) => (
-              <BusinessCard key={b.id} business={b} />
+            {featured.map((b, index) => (
+              <BusinessCard key={b.id} business={b} priority={index === 0} />
             ))}
           </div>
         </section>
@@ -158,8 +158,12 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
             </h2>
           )}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {common.map((b) => (
-              <BusinessCard key={b.id} business={b} />
+            {common.map((b, index) => (
+              <BusinessCard
+                key={b.id}
+                business={b}
+                priority={featured.length === 0 && index === 0}
+              />
             ))}
           </div>
         </section>

@@ -58,7 +58,7 @@ export default function Header({ currentCity }: HeaderProps) {
             <span className="text-sm font-extrabold tracking-tight">
               Comércios
             </span>
-            <span className="text-[10px] font-semibold text-emerald-200 -mt-0.5 tracking-wide uppercase">
+            <span className="text-[10px] font-semibold text-emerald-50 -mt-0.5 tracking-wide uppercase">
               Locais
             </span>
           </div>
@@ -74,7 +74,7 @@ export default function Header({ currentCity }: HeaderProps) {
             aria-label="Selecionar cidade"
           >
             <MapPin
-              className="w-3.5 h-3.5 text-emerald-200 shrink-0"
+              className="w-3.5 h-3.5 text-emerald-100 shrink-0"
               aria-hidden="true"
             />
             <span className="max-w-32 truncate">{activeCity.cityName}</span>

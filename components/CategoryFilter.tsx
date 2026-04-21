@@ -156,7 +156,7 @@ export default function CategoryFilter({
                   >
                     {Icon && (
                       <Icon
-                        className="w-4 h-4 shrink-0 text-stone-400"
+                        className="w-4 h-4 shrink-0 text-stone-600"
                         aria-hidden="true"
                       />
                     )}
@@ -193,7 +193,7 @@ export default function CategoryFilter({
               <h2 className="text-base font-bold text-stone-900">Categorias</h2>
               <button
                 onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg text-stone-500 hover:bg-stone-100"
+                className="p-1.5 rounded-lg text-stone-600 hover:bg-stone-100"
                 aria-label="Fechar"
               >
                 <X className="w-5 h-5" />

@@ -35,7 +35,7 @@ export default function SearchBar({
           {searchValue ? (
             <button
               onClick={() => onSearchChange("")}
-              className="absolute right-10 top-1/2 -translate-y-1/2 rounded-md p-1 text-stone-400 transition-colors hover:text-stone-600"
+              className="absolute right-10 top-1/2 -translate-y-1/2 rounded-md p-1 text-stone-600 transition-colors hover:text-stone-700"
               aria-label="Limpar busca"
             >
               <X className="h-4 w-4" />
@@ -43,7 +43,7 @@ export default function SearchBar({
           ) : null}
 
           <Search
-            className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400"
+            className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-600"
             aria-hidden="true"
           />
         </div>
@@ -68,7 +68,7 @@ export default function SearchBar({
             ))}
           </select>
           <ChevronDown
-            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400"
+            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-600"
             aria-hidden="true"
           />
         </div>

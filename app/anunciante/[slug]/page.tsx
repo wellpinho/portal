@@ -107,7 +107,7 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
             <h1 className="text-xl font-extrabold mt-3 tracking-tight">
               {business.name}
             </h1>
-            <p className="text-sm text-stone-500 mt-1">{business.location}</p>
+            <p className="text-sm text-stone-600 mt-1">{business.location}</p>
           </div>
         </section>
 
