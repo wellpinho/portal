@@ -3,10 +3,10 @@
 import { useState, useMemo } from "react";
 import { Store } from "lucide-react";
 import { Business, Category } from "@/lib/types";
-import { CATEGORIES } from "@/lib/mock-data";
 import BusinessCard from "./BusinessCard";
 import CategoryFilter from "./CategoryFilter";
 import SearchBar from "./SearchBar";
+import { CATEGORIES } from "@/lib/mock-data";
 
 interface HomePageClientProps {
   businesses: Business[];

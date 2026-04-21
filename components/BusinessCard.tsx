@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { MapPin, Star, MessageCircle, Crown } from "lucide-react";
 import { Business } from "@/lib/types";
 
@@ -11,6 +12,7 @@ export default function BusinessCard({ business }: BusinessCardProps) {
     name,
     category,
     location,
+    slug,
     phone,
     imageUrl,
     isOpen,
@@ -86,12 +88,22 @@ export default function BusinessCard({ business }: BusinessCardProps) {
           <span className="text-xs text-stone-400">({reviewCount})</span>
         </div>
 
+        {isFeatured && (
+          <Link
+            href={`/anunciante/${slug}`}
+            className="mt-auto pt-3 flex items-center justify-center gap-2 w-full bg-amber-100 hover:bg-amber-200 active:scale-[0.97] text-amber-900 font-semibold text-sm py-3 rounded-xl transition-all touch-manipulation border border-amber-300"
+            aria-label={`Visitar página de ${name}`}
+          >
+            Visitar
+          </Link>
+        )}
+
         {/* WhatsApp CTA */}
         <a
           href={`https://wa.me/${phone}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-auto pt-3 flex items-center justify-center gap-2 w-full bg-emerald-500 hover:bg-emerald-600 active:scale-[0.97] text-white font-semibold text-sm py-3 rounded-xl transition-all touch-manipulation"
+          className="mt-2 flex items-center justify-center gap-2 w-full bg-emerald-500 hover:bg-emerald-600 active:scale-[0.97] text-white font-semibold text-sm py-3 rounded-xl transition-all touch-manipulation"
           aria-label={`Falar com ${name} no WhatsApp`}
         >
           <MessageCircle className="w-4 h-4" aria-hidden="true" />
