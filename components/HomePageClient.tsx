@@ -6,7 +6,6 @@ import { Business, Category } from "@/lib/types";
 import BusinessCard from "./BusinessCard";
 import CategoryFilter from "./CategoryFilter";
 import SearchBar from "./SearchBar";
-import { CATEGORIES } from "@/lib/mock-data";
 
 interface HomePageClientProps {
   businesses: Business[];
@@ -40,7 +39,6 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
       <div className="sticky top-16 z-40 bg-stone-50 pt-3 pb-3 space-y-2.5 -mx-4 px-4 border-b border-stone-100">
         <SearchBar value={search} onChange={setSearch} />
         <CategoryFilter
-          categories={CATEGORIES}
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />

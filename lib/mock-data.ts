@@ -1,14 +1,32 @@
 import { Business, Category } from "./types";
 
-export const CATEGORIES: Category[] = [
+/** Chips sempre visíveis na barra horizontal de filtros */
+export const PRIMARY_CATEGORIES: Category[] = [
   "Todos",
   "Produtos Coloniais",
-  "Serviços",
   "Gastronomia",
-  "Utilidade",
+  "Serviços",
   "Saúde",
-  "Comércio",
 ];
+
+/** Categorias agrupadas no botão "Mais" */
+export const EXTRA_CATEGORIES: Category[] = [
+  "Casa",
+  "Carro",
+  "Construção",
+  "Moda & Beleza",
+  "Educação",
+  "Turismo",
+  "Agropecuária",
+  "Comércio",
+  "Utilidade",
+];
+
+/** Lista completa — usada na lógica de filtragem */
+export const CATEGORIES: Category[] = [
+  ...PRIMARY_CATEGORIES.filter((c) => c !== "Todos"),
+  ...EXTRA_CATEGORIES,
+] as Category[];
 
 export const MOCK_BUSINESSES: Business[] = [
   {

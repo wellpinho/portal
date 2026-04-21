@@ -1,11 +1,18 @@
 export type Category =
   | "Todos"
+  | "Casa"
+  | "Carro"
+  | "Gastronomia"
+  | "Construção"
+  | "Moda & Beleza"
+  | "Educação"
+  | "Turismo"
   | "Produtos Coloniais"
   | "Serviços"
-  | "Gastronomia"
-  | "Utilidade"
   | "Saúde"
-  | "Comércio";
+  | "Agropecuária"
+  | "Comércio"
+  | "Utilidade";
 
 export interface Business {
   id: string;
