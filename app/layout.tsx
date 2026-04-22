@@ -60,7 +60,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${geistSans.variable} h-full antialiased`}>
       <head>
-        <link rel="apple-touch-icon" href="/pin-green.png" />
+        <link rel="apple-touch-icon" href="/pwa-pin-green.png" />
       </head>
       <body
         suppressHydrationWarning
