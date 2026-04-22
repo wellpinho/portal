@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { Store } from "lucide-react";
 import { Business, Category } from "@/lib/types";
+import { getActiveCategoryViewLabel } from "@/lib/category-view-label";
 import BusinessCard from "./BusinessCard";
 import CategoryFilter from "./CategoryFilter";
 import SearchBar from "./SearchBar";
@@ -56,6 +57,9 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
 
   const featured = filtered.filter((b) => b.isFeatured);
   const common = filtered.filter((b) => !b.isFeatured);
+
+  const activeListLabel = getActiveCategoryViewLabel(selectedCategory);
+
   const emptyStateTitle =
     selectedCategory === "Todos"
       ? "Ainda não encontramos anúncios para esta busca em Águas Mornas"
@@ -76,6 +80,16 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
+
+        <div className="flex items-center justify-between gap-2 rounded-xl border border-stone-200 bg-white px-3 py-2 text-xs text-stone-700">
+          <span className="font-semibold text-emerald-700">
+            {activeListLabel}
+          </span>
+          <span>
+            {filtered.length}{" "}
+            {filtered.length === 1 ? "resultado" : "resultados"}
+          </span>
+        </div>
       </div>
 
       {/* Empty state */}

@@ -54,13 +54,19 @@ export default function CategoryFilter({
 }: CategoryFilterProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileSheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      const target = e.target as Node;
+      const clickedInTrigger = dropdownRef.current?.contains(target);
+      const clickedInMobileSheet = mobileSheetRef.current?.contains(target);
+
+      if (clickedInTrigger || clickedInMobileSheet) {
+        return;
+      }
+
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setOpen(false);
       }
     }
@@ -117,13 +123,11 @@ export default function CategoryFilter({
                 : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 active:bg-stone-100",
             ].join(" ")}
           >
+            <span className="sm:hidden">{selected}</span>
             {extraIsSelected ? (
-              selected
+              <span className="hidden sm:inline">{selected}</span>
             ) : (
-              <>
-                <span className="md:hidden">Menu</span>
-                <span className="hidden md:inline">Mais categorias</span>
-              </>
+              <span className="hidden sm:inline">Mais categorias</span>
             )}
             <ChevronDown
               className={[
@@ -183,7 +187,10 @@ export default function CategoryFilter({
             aria-hidden="true"
           />
 
-          <div className="relative w-full bg-white rounded-t-3xl shadow-xl px-4 pt-5 pb-8 z-10">
+          <div
+            ref={mobileSheetRef}
+            className="relative w-full bg-white rounded-t-3xl shadow-xl px-4 pt-5 pb-8 z-10"
+          >
             <div
               className="mx-auto w-10 h-1 rounded-full bg-stone-200 mb-5"
               aria-hidden="true"
