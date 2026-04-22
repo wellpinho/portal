@@ -11,13 +11,13 @@
   "categories": ["shopping", "local", "business"],
   "icons": [
     {
-      "src": "/pin-green-mobile.png",
+      "src": "/pin-green.png",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/pin-green-mobile.png",
+      "src": "/pin-green.png",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "maskable"
