@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Store } from "lucide-react";
+import { MessageCircleMore, Store } from "lucide-react";
 import { Business, Category } from "@/lib/types";
 import { getActiveCategoryViewLabel } from "@/lib/category-view-label";
 import BusinessCard from "./BusinessCard";
@@ -98,7 +98,7 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
           <Store className="h-14 w-14 text-stone-600" aria-hidden="true" />
 
           <div className="w-full rounded-3xl border border-blue-100 bg-blue-50 px-5 py-6 shadow-sm sm:px-7">
-            <p className="text-lg font-semibold leading-snug text-stone-900">
+            <p className="text-lg font-semibold leading-snug text-stone-700">
               {emptyStateTitle}
             </p>
 
@@ -115,17 +115,10 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
               href={`https://wa.me/?text=${WHATSAPP_SHARE_MESSAGE}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-white transition-all hover:bg-emerald-600 active:scale-[0.98]"
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 sm:gap-3 rounded-2xl bg-emerald-500 px-2 py-3.5 text-sm font-semibold text-white transition-all hover:bg-emerald-600 active:scale-[0.98]"
               aria-label="Compartilhar Comércios Locais no WhatsApp"
             >
-              <svg
-                viewBox="0 0 32 32"
-                className="h-5 w-5 shrink-0 fill-current"
-                aria-hidden="true"
-              >
-                <path d="M19.11 17.21c-.28-.14-1.63-.8-1.88-.89-.25-.09-.43-.14-.61.14-.18.28-.7.89-.86 1.08-.16.19-.32.21-.6.07-.28-.14-1.16-.43-2.21-1.38-.81-.72-1.36-1.62-1.52-1.89-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.19-.28.28-.46.09-.19.05-.35-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.45-.61-.46l-.52-.01c-.18 0-.48.07-.73.35-.25.28-.95.93-.95 2.26s.98 2.62 1.11 2.8c.14.19 1.91 2.91 4.62 4.08.65.28 1.16.45 1.56.58.66.21 1.27.18 1.75.11.53-.08 1.63-.67 1.86-1.32.23-.65.23-1.21.16-1.32-.07-.12-.25-.19-.53-.32Z" />
-                <path d="M16.03 3.2c-7.07 0-12.8 5.73-12.8 12.8 0 2.25.59 4.45 1.72 6.39L3.2 28.8l6.56-1.72a12.74 12.74 0 0 0 6.27 1.64h.01c7.06 0 12.8-5.74 12.8-12.8 0-3.43-1.34-6.65-3.77-9.08A12.7 12.7 0 0 0 16.03 3.2Zm0 23.36h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-3.89 1.02 1.04-3.79-.25-.39a10.57 10.57 0 0 1-1.63-5.65c0-5.87 4.77-10.64 10.64-10.64 2.84 0 5.51 1.11 7.52 3.12a10.57 10.57 0 0 1 3.11 7.53c0 5.87-4.77 10.64-10.63 10.64Z" />
-              </svg>
+              <MessageCircleMore />
               Compartilhar no WhatsApp
             </a>
           </div>

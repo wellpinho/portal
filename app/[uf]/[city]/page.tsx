@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import HomePageClient from "@/components/HomePageClient";
 import { getBusinessesByLocation } from "@/lib/business-service";
 import { findCityRoute, formatCityNameFromSlug } from "@/lib/locations";
+import { FooterComponent } from "@/components/Footer";
 
 type CityPageProps = {
   params: Promise<{ uf: string; city: string }>;
@@ -46,6 +47,7 @@ export default async function CityPage({ params }: CityPageProps) {
     <div className="flex min-h-screen flex-col">
       <Header currentCity={cityRoute} />
       <HomePageClient businesses={businesses} />
+      <FooterComponent />
     </div>
   );
 }

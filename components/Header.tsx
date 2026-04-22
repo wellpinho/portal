@@ -11,6 +11,7 @@ import {
   findCityRoute,
   toCityPath,
 } from "@/lib/locations";
+import LogoComponent from "./Logo";
 
 interface HeaderProps {
   currentCity?: CityRoute;
@@ -51,17 +52,7 @@ export default function Header({ currentCity }: HeaderProps) {
           className="flex items-center gap-2 shrink-0"
           aria-label="Comércios Locais – início"
         >
-          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-            <Store className="w-4 h-4 text-white" aria-hidden="true" />
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-extrabold tracking-tight">
-              Comércios
-            </span>
-            <span className="text-[10px] font-semibold text-emerald-50 -mt-0.5 tracking-wide uppercase">
-              Locais
-            </span>
-          </div>
+          <LogoComponent />
         </Link>
 
         {/* City selector */}
