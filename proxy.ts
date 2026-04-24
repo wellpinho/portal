@@ -3,7 +3,7 @@ import { DEFAULT_CITY_PATH, isSupportedCityPath } from "@/lib/locations";
 
 const LOCATION_COOKIE = "cl_location";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (request.nextUrl.pathname !== "/") {
     return NextResponse.next();
   }
