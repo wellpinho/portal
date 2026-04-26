@@ -1,6 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import {
+  type KeyboardEvent as ReactKeyboardEvent,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { MapPin, Building2, ChevronDown, CirclePlus, X } from "lucide-react";
@@ -12,6 +19,198 @@ import {
   toCityPath,
 } from "@/lib/locations";
 import LogoComponent from "./Logo";
+
+type SelectOption = {
+  value: string;
+  label: string;
+};
+
+interface CustomSelectProps {
+  value: string;
+  options: SelectOption[];
+  onChange: (value: string) => void;
+  ariaLabel: string;
+  buttonClassName: string;
+  menuClassName?: string;
+}
+
+function CustomSelect({
+  value,
+  options,
+  onChange,
+  ariaLabel,
+  buttonClassName,
+  menuClassName,
+}: CustomSelectProps) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const listboxId = useId();
+
+  const selectedIndex = Math.max(
+    options.findIndex((option) => option.value === value),
+    0,
+  );
+  const selectedOption = options[selectedIndex] ?? options[0];
+
+  function closeMenu() {
+    setOpen(false);
+    setActiveIndex(-1);
+  }
+
+  function openMenu() {
+    setOpen(true);
+    setActiveIndex(selectedIndex);
+  }
+
+  function selectIndex(index: number) {
+    const next = options[index];
+    if (!next) return;
+    onChange(next.value);
+    closeMenu();
+  }
+
+  useEffect(() => {
+    function onDocumentPointerDown(event: MouseEvent) {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (!containerRef.current?.contains(target)) {
+        closeMenu();
+      }
+    }
+
+    function onDocumentKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    }
+
+    document.addEventListener("mousedown", onDocumentPointerDown);
+    document.addEventListener("keydown", onDocumentKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", onDocumentPointerDown);
+      document.removeEventListener("keydown", onDocumentKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open || activeIndex < 0) return;
+    optionRefs.current[activeIndex]?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex, open]);
+
+  function onTriggerKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>) {
+    if (["Enter", " ", "ArrowDown"].includes(event.key)) {
+      event.preventDefault();
+      if (!open) {
+        openMenu();
+      } else {
+        setActiveIndex((prev) =>
+          prev < options.length - 1 ? prev + 1 : options.length - 1,
+        );
+      }
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) {
+        openMenu();
+      } else {
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
+      }
+    }
+  }
+
+  function onListKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveIndex((prev) =>
+        prev < options.length - 1 ? prev + 1 : options.length - 1,
+      );
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
+      return;
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      selectIndex(activeIndex === -1 ? selectedIndex : activeIndex);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu();
+    }
+  }
+
+  return (
+    <div className="relative w-full" ref={containerRef}>
+      <button
+        type="button"
+        className={buttonClassName}
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listboxId}
+        onClick={() => (open ? closeMenu() : openMenu())}
+        onKeyDown={onTriggerKeyDown}
+      >
+        <span className="truncate">{selectedOption?.label}</span>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-stone-400 transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+
+      {open && (
+        <div
+          id={listboxId}
+          role="listbox"
+          tabIndex={-1}
+          className={
+            menuClassName ??
+            "absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
+          }
+          onKeyDown={onListKeyDown}
+        >
+          {options.map((option, index) => {
+            const isSelected = option.value === value;
+            const isActive = index === activeIndex;
+
+            return (
+              <button
+                key={option.value}
+                ref={(node) => {
+                  optionRefs.current[index] = node;
+                }}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => selectIndex(index)}
+                className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  isSelected
+                    ? "bg-emerald-50 text-emerald-900"
+                    : isActive
+                      ? "bg-stone-100 text-stone-900"
+                      : "text-stone-700 hover:bg-stone-100"
+                }`}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface HeaderProps {
   currentCity?: CityRoute;
@@ -36,8 +235,8 @@ export default function Header({
 
   const activeCity = currentCity ?? routeCity ?? DEFAULT_CITY_ROUTE;
 
-  function handleChangeCity(e: React.ChangeEvent<HTMLSelectElement>) {
-    const [uf, citySlug] = e.target.value.split("|");
+  function handleChangeCity(value: string) {
+    const [uf, citySlug] = value.split("|");
     const nextPath = toCityPath(uf, citySlug);
     void fetch("/api/location", {
       method: "POST",
@@ -48,8 +247,7 @@ export default function Header({
     setDrawerOpen(false);
   }
 
-  function handleChangeNeighborhood(e: React.ChangeEvent<HTMLSelectElement>) {
-    const value = e.target.value;
+  function handleChangeNeighborhood(value: string) {
     const params = new URLSearchParams();
     if (value !== "Todos os bairros") {
       params.set("bairro", value);
@@ -59,11 +257,25 @@ export default function Header({
     setDrawerOpen(false);
   }
 
-  const inlineSelectClass =
-    "flex-1 min-w-0 appearance-none bg-transparent text-sm text-stone-700 font-medium outline-none border-none cursor-pointer py-3 truncate antialiased";
+  const cityOptions = useMemo<SelectOption[]>(
+    () =>
+      SUPPORTED_CITY_ROUTES.map((city) => ({
+        value: `${city.uf}|${city.citySlug}`,
+        label: city.cityName,
+      })),
+    [],
+  );
 
-  const drawerSelectClass =
-    "flex-1 min-w-0 appearance-none bg-transparent text-base text-stone-800 font-medium outline-none border-none cursor-pointer py-3.5 antialiased";
+  const neighborhoodOptions = useMemo<SelectOption[]>(
+    () => [
+      { value: "Todos os bairros", label: "Todos os bairros" },
+      ...neighborhoods.map((neighborhood) => ({
+        value: neighborhood,
+        label: neighborhood,
+      })),
+    ],
+    [neighborhoods],
+  );
 
   const locationLabel =
     selectedNeighborhood === "Todos os bairros"
@@ -119,57 +331,37 @@ export default function Header({
               />
             </button>
 
-            {/* Desktop: two inline selects */}
-            <div className="hidden sm:flex items-stretch border border-stone-200 rounded-xl overflow-hidden bg-white">
-              <label className="flex flex-1 items-center gap-1.5 px-3 border-r border-stone-200 cursor-pointer hover:bg-stone-50 transition-colors">
+            {/* Desktop: two inline custom dropdowns */}
+            <div className="hidden sm:flex items-stretch border border-stone-200 rounded-xl bg-white">
+              <div className="flex flex-1 items-center gap-2 px-3 border-r border-stone-200 hover:bg-stone-50 transition-colors">
                 <MapPin
                   className="w-3.5 h-3.5 text-emerald-600 shrink-0 pointer-events-none"
                   aria-hidden="true"
                 />
-                <select
+                <CustomSelect
                   value={`${activeCity.uf}|${activeCity.citySlug}`}
                   onChange={handleChangeCity}
-                  className={inlineSelectClass}
                   aria-label="Selecionar cidade"
-                >
-                  {SUPPORTED_CITY_ROUTES.map((city) => (
-                    <option
-                      key={`${city.uf}-${city.citySlug}`}
-                      value={`${city.uf}|${city.citySlug}`}
-                    >
-                      {city.cityName}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className="w-3.5 h-3.5 text-stone-400 shrink-0 pointer-events-none"
-                  aria-hidden="true"
+                  options={cityOptions}
+                  buttonClassName="flex w-full items-center justify-between gap-2 py-3 text-sm font-medium text-stone-700 outline-none"
+                  menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
                 />
-              </label>
+              </div>
 
-              <label className="flex flex-1 items-center gap-1.5 px-3 cursor-pointer hover:bg-stone-50 transition-colors">
+              <div className="flex flex-1 items-center gap-2 px-3 hover:bg-stone-50 transition-colors">
                 <Building2
                   className="w-3.5 h-3.5 text-emerald-600 shrink-0 pointer-events-none"
                   aria-hidden="true"
                 />
-                <select
+                <CustomSelect
                   value={selectedNeighborhood}
                   onChange={handleChangeNeighborhood}
-                  className={inlineSelectClass}
                   aria-label="Selecionar bairro"
-                >
-                  <option value="Todos os bairros">Todos os bairros</option>
-                  {neighborhoods.map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className="w-3.5 h-3.5 text-stone-400 shrink-0 pointer-events-none"
-                  aria-hidden="true"
+                  options={neighborhoodOptions}
+                  buttonClassName="flex w-full items-center justify-between gap-2 py-3 text-sm font-medium text-stone-700 outline-none"
+                  menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
                 />
-              </label>
+              </div>
             </div>
           </div>
         </div>
@@ -213,55 +405,35 @@ export default function Header({
 
             {/* Selects */}
             <div className="px-4 pb-10 space-y-3">
-              <label className="flex items-center gap-3 border border-stone-200 rounded-xl px-3 bg-white hover:bg-stone-50 transition-colors cursor-pointer">
+              <div className="flex items-center gap-3 border border-stone-200 rounded-xl px-3 bg-white hover:bg-stone-50 transition-colors">
                 <MapPin
                   className="w-4 h-4 text-emerald-600 shrink-0 pointer-events-none"
                   aria-hidden="true"
                 />
-                <select
+                <CustomSelect
                   value={`${activeCity.uf}|${activeCity.citySlug}`}
                   onChange={handleChangeCity}
-                  className={drawerSelectClass}
                   aria-label="Selecionar cidade"
-                >
-                  {SUPPORTED_CITY_ROUTES.map((city) => (
-                    <option
-                      key={`${city.uf}-${city.citySlug}`}
-                      value={`${city.uf}|${city.citySlug}`}
-                    >
-                      {city.cityName}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className="w-4 h-4 text-stone-400 shrink-0 pointer-events-none"
-                  aria-hidden="true"
+                  options={cityOptions}
+                  buttonClassName="flex w-full items-center justify-between gap-2 py-3.5 text-base font-medium text-stone-800 outline-none"
+                  menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
                 />
-              </label>
+              </div>
 
-              <label className="flex items-center gap-3 border border-stone-200 rounded-xl px-3 bg-white hover:bg-stone-50 transition-colors cursor-pointer">
+              <div className="flex items-center gap-3 border border-stone-200 rounded-xl px-3 bg-white hover:bg-stone-50 transition-colors">
                 <Building2
                   className="w-4 h-4 text-emerald-600 shrink-0 pointer-events-none"
                   aria-hidden="true"
                 />
-                <select
+                <CustomSelect
                   value={selectedNeighborhood}
                   onChange={handleChangeNeighborhood}
-                  className={drawerSelectClass}
                   aria-label="Selecionar bairro"
-                >
-                  <option value="Todos os bairros">Todos os bairros</option>
-                  {neighborhoods.map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className="w-4 h-4 text-stone-400 shrink-0 pointer-events-none"
-                  aria-hidden="true"
+                  options={neighborhoodOptions}
+                  buttonClassName="flex w-full items-center justify-between gap-2 py-3.5 text-base font-medium text-stone-800 outline-none"
+                  menuClassName="absolute left-0 right-0 bottom-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
                 />
-              </label>
+              </div>
             </div>
           </div>
         </div>
