@@ -341,7 +341,7 @@ export default function Header({
                 <CustomSelect
                   value={`${activeCity.uf}|${activeCity.citySlug}`}
                   onChange={handleChangeCity}
-                  aria-label="Selecionar cidade"
+                  ariaLabel="Selecionar cidade"
                   options={cityOptions}
                   buttonClassName="flex w-full items-center justify-between gap-2 py-3 text-sm font-medium text-stone-700 outline-none"
                   menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
@@ -356,7 +356,7 @@ export default function Header({
                 <CustomSelect
                   value={selectedNeighborhood}
                   onChange={handleChangeNeighborhood}
-                  aria-label="Selecionar bairro"
+                  ariaLabel="Selecionar bairro"
                   options={neighborhoodOptions}
                   buttonClassName="flex w-full items-center justify-between gap-2 py-3 text-sm font-medium text-stone-700 outline-none"
                   menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
@@ -413,7 +413,7 @@ export default function Header({
                 <CustomSelect
                   value={`${activeCity.uf}|${activeCity.citySlug}`}
                   onChange={handleChangeCity}
-                  aria-label="Selecionar cidade"
+                  ariaLabel="Selecionar cidade"
                   options={cityOptions}
                   buttonClassName="flex w-full items-center justify-between gap-2 py-3.5 text-base font-medium text-stone-800 outline-none"
                   menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
@@ -428,7 +428,7 @@ export default function Header({
                 <CustomSelect
                   value={selectedNeighborhood}
                   onChange={handleChangeNeighborhood}
-                  aria-label="Selecionar bairro"
+                  ariaLabel="Selecionar bairro"
                   options={neighborhoodOptions}
                   buttonClassName="flex w-full items-center justify-between gap-2 py-3.5 text-base font-medium text-stone-800 outline-none"
                   menuClassName="absolute left-0 right-0 bottom-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
