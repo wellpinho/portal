@@ -6,7 +6,6 @@ import { Business, Category } from "@/lib/types";
 import { getActiveCategoryViewLabel } from "@/lib/category-view-label";
 import BusinessCard from "./BusinessCard";
 import CategoryFilter from "./CategoryFilter";
-import SearchBar from "./SearchBar";
 
 const WHATSAPP_SHARE_MESSAGE = encodeURIComponent(
   "Oi! Conheci o Comércios Locais, um portal para ajudar a gente a encontrar tudo aqui em Águas Mornas. Dá uma olhada e vamos ajudar a divulgar nossos produtores e lojas: https://comercioslocais.com.br/aguas-mornas-sc",
@@ -14,29 +13,16 @@ const WHATSAPP_SHARE_MESSAGE = encodeURIComponent(
 
 interface HomePageClientProps {
   businesses: Business[];
+  selectedNeighborhood?: string;
 }
 
-export default function HomePageClient({ businesses }: HomePageClientProps) {
-  const [search, setSearch] = useState("");
-  const [selectedNeighborhood, setSelectedNeighborhood] =
-    useState("Todos os bairros");
+export default function HomePageClient({
+  businesses,
+  selectedNeighborhood = "Todos os bairros",
+}: HomePageClientProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category>("Todos");
 
-  const neighborhoods = useMemo(() => {
-    const values = new Set<string>();
-
-    for (const business of businesses) {
-      const [neighborhood] = business.location
-        .split(",")
-        .map((part) => part.trim());
-      if (neighborhood) values.add(neighborhood);
-    }
-
-    return Array.from(values).sort((a, b) => a.localeCompare(b, "pt-BR"));
-  }, [businesses]);
-
   const filtered = useMemo(() => {
-    const q = search.toLowerCase().trim();
     return businesses.filter((b) => {
       const matchesCategory =
         selectedCategory === "Todos" || b.category === selectedCategory;
@@ -46,14 +32,9 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
         selectedNeighborhood === "Todos os bairros" ||
         businessNeighborhood === selectedNeighborhood;
 
-      const matchesSearch =
-        !q ||
-        b.name.toLowerCase().includes(q) ||
-        b.category.toLowerCase().includes(q);
-
-      return matchesCategory && matchesNeighborhood && matchesSearch;
+      return matchesCategory && matchesNeighborhood;
     });
-  }, [businesses, search, selectedCategory, selectedNeighborhood]);
+  }, [businesses, selectedCategory, selectedNeighborhood]);
 
   const featured = filtered.filter((b) => b.isFeatured);
   const common = filtered.filter((b) => !b.isFeatured);
@@ -67,15 +48,8 @@ export default function HomePageClient({ businesses }: HomePageClientProps) {
 
   return (
     <main className="max-w-7xl mx-auto w-full px-4 pb-10">
-      {/* Sticky search + filters */}
-      <div className="sticky top-16 z-40 bg-stone-50 pt-3 pb-3 space-y-2.5 -mx-4 px-4 border-b border-stone-100">
-        <SearchBar
-          searchValue={search}
-          onSearchChange={setSearch}
-          neighborhoodValue={selectedNeighborhood}
-          onNeighborhoodChange={setSelectedNeighborhood}
-          neighborhoods={neighborhoods}
-        />
+      {/* Sticky filters – offset accounts for green bar (56px) + location bar (~60px) */}
+      <div className="sticky top-28 z-40 bg-stone-50 pt-3 pb-3 space-y-2.5 -mx-4 px-4 border-b border-stone-100">
         <CategoryFilter
           selected={selectedCategory}
           onSelect={setSelectedCategory}

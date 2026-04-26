@@ -8,6 +8,7 @@ import { FooterComponent } from "@/components/Footer";
 
 type CityPageProps = {
   params: Promise<{ uf: string; city: string }>;
+  searchParams: Promise<{ bairro?: string }>;
 };
 
 export async function generateMetadata({
@@ -30,8 +31,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function CityPage({ params }: CityPageProps) {
+export default async function CityPage({
+  params,
+  searchParams,
+}: CityPageProps) {
   const { uf, city } = await params;
+  const { bairro } = await searchParams;
   const cityRoute = findCityRoute(uf, city);
 
   if (!cityRoute) {
@@ -43,10 +48,27 @@ export default async function CityPage({ params }: CityPageProps) {
     cityRoute.citySlug,
   );
 
+  const neighborhoods = Array.from(
+    new Set(
+      businesses
+        .map((b) => b.location.split(",")[0]?.trim())
+        .filter((n): n is string => Boolean(n)),
+    ),
+  ).sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+  const selectedNeighborhood = bairro ?? "Todos os bairros";
+
   return (
     <div className="flex min-h-screen flex-col">
-      <Header currentCity={cityRoute} />
-      <HomePageClient businesses={businesses} />
+      <Header
+        currentCity={cityRoute}
+        neighborhoods={neighborhoods}
+        selectedNeighborhood={selectedNeighborhood}
+      />
+      <HomePageClient
+        businesses={businesses}
+        selectedNeighborhood={selectedNeighborhood}
+      />
       <FooterComponent />
     </div>
   );
