@@ -9,6 +9,7 @@ import {
   MapPinned,
   MessageCircle,
 } from "lucide-react";
+import BusinessGallery from "@/components/BusinessGallery";
 import Header from "@/components/Header";
 import { getBusinessBySlug } from "@/lib/mock-data";
 import { DEFAULT_CITY_PATH } from "@/lib/locations";
@@ -81,56 +82,30 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
         </div>
 
         <section className="mt-3">
-          <div className="relative aspect-16/6 w-full bg-stone-200 overflow-hidden">
-            <Image
-              src={business.bannerUrl}
-              alt={`Banner de ${business.name}`}
-              fill
-              className="object-cover"
-              unoptimized
-              priority
-            />
-          </div>
-
-          <div className="px-4 -mt-10 relative z-10">
-            <div className="w-20 h-20 rounded-2xl bg-white border border-stone-200 shadow-sm overflow-hidden">
-              <Image
-                src={business.logoUrl}
-                alt={`Logo de ${business.name}`}
-                width={80}
-                height={80}
-                className="w-full h-full object-cover"
-                unoptimized
-              />
-            </div>
-
-            <h1 className="text-xl font-extrabold mt-3 tracking-tight">
-              {business.name}
-            </h1>
-            <p className="text-sm text-stone-600 mt-1">{business.location}</p>
-          </div>
-        </section>
-
-        <section className="px-4 mt-5">
-          <h2 className="text-sm font-bold uppercase tracking-wide text-stone-700">
-            Galeria
-          </h2>
-          <div className="grid grid-cols-4 gap-2 mt-2">
-            {business.galleryImages.map((image, index) => (
-              <div
-                key={image}
-                className="relative aspect-square rounded-xl overflow-hidden bg-stone-200"
-              >
+          <BusinessGallery
+            businessName={business.name}
+            coverImage={business.bannerUrl}
+            coverAlt={`Banner de ${business.name}`}
+            images={business.galleryImages}
+          >
+            <div className="px-4 -mt-10 relative z-10">
+              <div className="w-20 h-20 rounded-2xl bg-white border border-stone-200 shadow-sm overflow-hidden">
                 <Image
-                  src={image}
-                  alt={`Imagem ${index + 1} de ${business.name}`}
-                  fill
-                  className="object-cover"
+                  src={business.logoUrl}
+                  alt={`Logo de ${business.name}`}
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-cover"
                   unoptimized
                 />
               </div>
-            ))}
-          </div>
+
+              <h1 className="text-xl font-extrabold mt-3 tracking-tight">
+                {business.name}
+              </h1>
+              <p className="text-sm text-stone-600 mt-1">{business.location}</p>
+            </div>
+          </BusinessGallery>
         </section>
 
         <section className="px-4 mt-6">
