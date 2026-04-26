@@ -88,9 +88,6 @@ export default function BusinessGallery({
     };
   }, [allImages.length, selectedIndex]);
 
-  const selectedImage =
-    selectedIndex === null ? null : allImages[selectedIndex];
-
   return (
     <>
       <button
@@ -141,7 +138,7 @@ export default function BusinessGallery({
         </div>
       </div>
 
-      {selectedImage ? (
+      {selectedIndex !== null ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 px-4 py-6"
           role="dialog"
@@ -201,7 +198,7 @@ export default function BusinessGallery({
 
             <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-stone-900 shadow-2xl sm:aspect-16/10">
               <Image
-                src={selectedImage}
+                src={allImages[selectedIndex]}
                 alt={
                   selectedIndex === 0
                     ? `Capa de ${businessName}`
