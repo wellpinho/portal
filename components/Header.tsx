@@ -10,7 +10,14 @@ import {
 } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { MapPin, Building2, ChevronDown, CirclePlus, X } from "lucide-react";
+import {
+  MapPin,
+  Building2,
+  ChevronDown,
+  CirclePlus,
+  X,
+  Megaphone,
+} from "lucide-react";
 import {
   CityRoute,
   DEFAULT_CITY_ROUTE,
@@ -301,8 +308,8 @@ export default function Header({
               className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-50 active:scale-[0.98] shrink-0"
               aria-label="Anuncie sua marca"
             >
-              <CirclePlus className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Anuncie sua marca</span>
+              <Megaphone className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           </div>
         </div>

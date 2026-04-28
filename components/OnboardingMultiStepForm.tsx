@@ -27,34 +27,186 @@ type FormData = {
   ownerName: string;
   businessName: string;
   ownerWhatsapp: string;
-  description: string;
+  password: string;
+  about: string;
+  zipcode: string;
   neighborhood: string;
-  category: string;
+  street: string;
+  category: ProfileCategory | "";
+  segment: string;
   logoFile: File | null;
   instagram: string;
-  supportWhatsapp: string;
+  businessWhatsapp: string;
+  email: string;
   selectedPlan: "free" | "premium";
+  city: string;
+  state: string;
+};
+
+type CepLookupResponse = {
+  zipcode: string;
+  street: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+};
+
+export enum ProfileCategory {
+  GASTRONOMIA = "gastronomia",
+  SERVICOS_AUTOMOTIVOS = "servicos_automotivos",
+  AGRO_COLONIAIS = "agro_coloniais",
+  SAUDE_BELEZA = "saude_beleza",
+  COMERCIO_VAREJO = "comercio_varejo",
+  SERVICOS_PROFISSIONAIS = "servicos_profissionais",
+  TURISMO_LAZER = "turismo_lazer",
+  IMOBILIARIA_LAR = "imobiliaria_lar",
+  CASA_CONSTRUCAO = "casa_construcao",
+}
+
+export const CategorySegments: Record<ProfileCategory, string[]> = {
+  [ProfileCategory.GASTRONOMIA]: [
+    "Bar e Choperia",
+    "Restaurante",
+    "Lanchonete",
+    "Cafeteria",
+    "Pizzaria",
+    "Padaria",
+  ],
+  [ProfileCategory.SERVICOS_AUTOMOTIVOS]: [
+    "Oficina Mecanica",
+    "Autoeletrica",
+    "Lava-jato",
+    "Borracharia",
+    "Pecas",
+  ],
+  [ProfileCategory.CASA_CONSTRUCAO]: [
+    "Material de Construcao",
+    "Marcenaria",
+    "Mao de Obra (Pedreiro)",
+    "Eletrica e Hidraulica",
+    "Pintura",
+    "Arquitetura e Projetos",
+  ],
+  [ProfileCategory.AGRO_COLONIAIS]: [
+    "Produtos Coloniais",
+    "Agropecuaria",
+    "Veterinaria",
+    "Hortifruti",
+  ],
+  [ProfileCategory.SAUDE_BELEZA]: [
+    "Farmacia",
+    "Salao de Beleza",
+    "Academia",
+    "Dentista",
+    "Estetica",
+  ],
+  [ProfileCategory.COMERCIO_VAREJO]: [
+    "Moda",
+    "Calcados",
+    "Supermercado",
+    "Papelaria",
+    "Eletronicos",
+  ],
+  [ProfileCategory.SERVICOS_PROFISSIONAIS]: [
+    // Profissionais Liberais
+    "Contabilidade",
+    "Advocacia",
+    "Consultoria e Assessoria",
+    "Fotografia e Filmagens",
+
+    // Cuidados e Bem-estar (Autónomos)
+    "Cuidador de Idosos",
+    "Babás / Dog Walker",
+    "Personal Trainer",
+
+    // Manutenção e Serviços Gerais (A força da cidade)
+    "Marido de Aluguer (Reparos)",
+    "Montador de Móveis",
+    "Limpeza Residencial / Diarista",
+    "Piscineiro",
+    "Jardinagem",
+    "Fretes e Mudanças",
+
+    // Tecnologia e Eventos
+    "Informática e Suporte",
+    "Organização de Eventos / Buffet",
+    "Design e Marketing",
+
+    // Outros
+    "Costura e Reformas",
+    "Aulas Particulares / Reforço",
+  ],
+  [ProfileCategory.TURISMO_LAZER]: [
+    "Pousada",
+    "Hotel",
+    "Parque Termal",
+    "Eventos",
+  ],
+  [ProfileCategory.IMOBILIARIA_LAR]: [
+    "Corretor de Imoveis",
+    "Imobiliaria",
+    "Aluguel de Temporada",
+    "Jardinagem e Paisagismo",
+    "Limpeza e Conservacao",
+    "Seguranca Residencial",
+  ],
+};
+
+const profileCategoryLabels: Record<ProfileCategory, string> = {
+  [ProfileCategory.GASTRONOMIA]: "Gastronomia",
+  [ProfileCategory.SERVICOS_AUTOMOTIVOS]: "Servicos Automotivos",
+  [ProfileCategory.AGRO_COLONIAIS]: "Agro e Coloniais",
+  [ProfileCategory.SAUDE_BELEZA]: "Saude e Beleza",
+  [ProfileCategory.COMERCIO_VAREJO]: "Comercio e Varejo",
+  [ProfileCategory.SERVICOS_PROFISSIONAIS]: "Servicos Profissionais",
+  [ProfileCategory.TURISMO_LAZER]: "Turismo e Lazer",
+  [ProfileCategory.IMOBILIARIA_LAR]: "Imobiliaria e Lar",
+  [ProfileCategory.CASA_CONSTRUCAO]: "Casa e Construcao",
 };
 
 const TOTAL_STEPS = 3;
 
-const neighborhoods = [
-  "Águas Mornas - Centro",
-  "Santa Isabel",
-  "Rio do Cedro",
-  "Vargem Grande",
-  "Rancho Queimado (limítrofe)",
+const allowedImageMimeTypes = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
 ];
 
-const categories = [
-  "Restaurante e Lanchonete",
-  "Mercado e Mercearia",
-  "Beleza e Estética",
-  "Saúde e Bem-estar",
-  "Serviços Gerais",
-  "Moda e Acessórios",
-  "Artesanato e Produtos Coloniais",
-];
+function getImageMimeTypeFromName(fileName: string): string | null {
+  const normalized = fileName.toLowerCase();
+
+  if (normalized.endsWith(".jpg") || normalized.endsWith(".jpeg")) {
+    return "image/jpeg";
+  }
+
+  if (normalized.endsWith(".png")) {
+    return "image/png";
+  }
+
+  if (normalized.endsWith(".webp")) {
+    return "image/webp";
+  }
+
+  return null;
+}
+
+function normalizeImageFile(file: File): File | null {
+  const detectedType = file.type || getImageMimeTypeFromName(file.name);
+
+  if (!detectedType || !allowedImageMimeTypes.includes(detectedType)) {
+    return null;
+  }
+
+  if (file.type === detectedType) {
+    return file;
+  }
+
+  return new File([file], file.name, {
+    type: detectedType,
+    lastModified: file.lastModified,
+  });
+}
 
 function formatWhatsapp(value: string): string {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -68,30 +220,91 @@ function formatWhatsapp(value: string): string {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
+function formatZipcode(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+
+  if (digits.length <= 5) return digits;
+
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+}
+
+function isSequentialNumericPassword(value: string): boolean {
+  if (!/^\d+$/.test(value) || value.length < 2) return false;
+
+  let ascending = true;
+  let descending = true;
+
+  for (let index = 1; index < value.length; index += 1) {
+    const previous = Number(value[index - 1]);
+    const current = Number(value[index]);
+
+    if (current - previous !== 1) ascending = false;
+    if (previous - current !== 1) descending = false;
+  }
+
+  return ascending || descending;
+}
+
+function validatePasswordField(field: HTMLInputElement): void {
+  if (field.validity.valueMissing) {
+    field.setCustomValidity("Crie uma senha para acessar sua conta.");
+    return;
+  }
+
+  if (field.validity.tooShort) {
+    field.setCustomValidity("A senha precisa ter no minimo 8 caracteres.");
+    return;
+  }
+
+  if (isSequentialNumericPassword(field.value)) {
+    field.setCustomValidity("A senha nao pode ser uma sequencia numerica.");
+    return;
+  }
+
+  field.setCustomValidity("");
+}
+
 export default function OnboardingMultiStepForm() {
   const [step, setStep] = useState<Step>(1);
   const formRef = useRef<HTMLFormElement>(null);
+  const [cepLoading, setCepLoading] = useState(false);
+  const [cepFeedback, setCepFeedback] = useState("");
+  const [lastZipLookup, setLastZipLookup] = useState("");
   const [formData, setFormData] = useState<FormData>({
     ownerName: "",
     businessName: "",
     ownerWhatsapp: "",
-    description: "",
+    password: "",
+    about: "",
+    zipcode: "",
     neighborhood: "",
+    street: "",
     category: "",
+    segment: "",
     logoFile: null,
     instagram: "",
-    supportWhatsapp: "",
+    businessWhatsapp: "",
+    email: "",
     selectedPlan: "free",
+    state: "SC",
+    city: "Águas Mornas",
   });
 
   const progress = useMemo(() => (step / TOTAL_STEPS) * 100, [step]);
+  const availableSegments = useMemo(
+    () =>
+      formData.category
+        ? CategorySegments[formData.category as ProfileCategory]
+        : [],
+    [formData.category],
+  );
 
   function updateField<K extends keyof FormData>(key: K, value: FormData[K]) {
     setFormData((prev) => ({ ...prev, [key]: value }));
   }
 
   function onWhatsappChange(
-    key: "ownerWhatsapp" | "supportWhatsapp",
+    key: "ownerWhatsapp" | "businessWhatsapp",
     value: string,
   ) {
     updateField(key, formatWhatsapp(value));
@@ -102,6 +315,44 @@ export default function OnboardingMultiStepForm() {
     updateField("logoFile", file);
   }
 
+  async function lookupAddressByZipcode(rawZipcode: string) {
+    const digits = rawZipcode.replace(/\D/g, "");
+
+    if (digits.length !== 8) return;
+
+    setCepLoading(true);
+    setCepFeedback("");
+
+    try {
+      const response = await fetch(`/api/location/cep/${digits}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        setCepFeedback("Nao foi possivel encontrar o endereco pelo CEP.");
+        updateField("street", "");
+        updateField("neighborhood", "");
+        updateField("city", "");
+        updateField("state", "");
+        return;
+      }
+
+      const data = (await response.json()) as CepLookupResponse;
+
+      updateField("street", data.street || "");
+      updateField("neighborhood", data.neighborhood || "");
+      updateField("city", data.city || "");
+      updateField("state", data.state || "");
+      setCepFeedback("");
+      setLastZipLookup(digits);
+    } catch {
+      setCepFeedback("Erro ao consultar CEP. Tente novamente.");
+    } finally {
+      setCepLoading(false);
+    }
+  }
+
   function onFieldInvalid(event: InvalidEvent<FormField>) {
     const field = event.currentTarget;
 
@@ -110,6 +361,11 @@ export default function OnboardingMultiStepForm() {
         field.dataset.requiredMessage ||
           "Este campo precisa ser preenchido para continuar.",
       );
+      return;
+    }
+
+    if (field instanceof HTMLInputElement && field.name === "password") {
+      validatePasswordField(field);
       return;
     }
 
@@ -136,6 +392,13 @@ export default function OnboardingMultiStepForm() {
 
   function reportFirstInvalidField(stepToValidate: Step): boolean {
     const fields = getStepFields(stepToValidate);
+
+    for (const field of fields) {
+      if (field instanceof HTMLInputElement && field.name === "password") {
+        validatePasswordField(field);
+      }
+    }
+
     const invalidField = fields.find((field) => !field.checkValidity());
 
     if (!invalidField) return true;
@@ -154,7 +417,7 @@ export default function OnboardingMultiStepForm() {
     setStep((prev) => Math.max(prev - 1, 1) as Step);
   }
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     for (const stepToValidate of [1, 2] as const) {
@@ -167,8 +430,53 @@ export default function OnboardingMultiStepForm() {
       return;
     }
 
-    // Placeholder de submit: integrar com API quando o endpoint estiver pronto.
-    console.log("Onboarding payload", formData);
+    const payload = new window.FormData();
+    payload.append("ownerName", formData.ownerName);
+    payload.append("email", formData.email);
+    payload.append("password", formData.password);
+    payload.append("ownerWhatsapp", formData.ownerWhatsapp);
+    payload.append("businessName", formData.businessName);
+    payload.append("about", formData.about);
+    payload.append("neighborhood", formData.neighborhood);
+    payload.append("city", formData.city);
+    payload.append("state", formData.state);
+    payload.append("category", formData.category);
+    payload.append("segment", formData.segment);
+
+    const socialLinks = {
+      instagram: formData.instagram.trim() || undefined,
+    };
+
+    if (socialLinks.instagram) {
+      payload.append("socialLinks", JSON.stringify(socialLinks));
+    }
+
+    payload.append("businessWhatsapp", formData.businessWhatsapp);
+    payload.append("selectedPlan", formData.selectedPlan);
+    if (formData.logoFile) {
+      const normalizedFile = normalizeImageFile(formData.logoFile);
+
+      if (!normalizedFile) {
+        console.log("Arquivo de imagem invalido. Use JPG, PNG ou WEBP.");
+        return;
+      }
+
+      payload.append("avatar", normalizedFile);
+    }
+
+    const response = await fetch("/api/profile/create", {
+      method: "POST",
+      body: payload,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => null);
+      console.log("Erro ao criar perfil:", error);
+      // TODO: exibir feedback de erro ao usuário
+      return;
+    }
+
+    // TODO: redirecionar ou exibir confirmação de sucesso
   }
 
   return (
@@ -266,16 +574,16 @@ export default function OnboardingMultiStepForm() {
                 </label>
 
                 <label className="grid gap-1.5 text-sm text-stone-700">
-                  Nome do Comércio
+                  Seu email
                   <input
-                    value={formData.businessName}
+                    value={formData.email}
                     onChange={(event) => {
-                      updateField("businessName", event.target.value);
+                      updateField("email", event.target.value);
                       clearFieldError(event.currentTarget);
                     }}
                     onInvalid={onFieldInvalid}
-                    data-required-message="Informe o nome do seu comércio para publicar o perfil."
-                    placeholder="Ex: Empório da Serra"
+                    data-required-message="Informe o seu email para contato."
+                    placeholder="Ex: ana@example.com"
                     required
                     className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
                   />
@@ -293,6 +601,26 @@ export default function OnboardingMultiStepForm() {
                     data-required-message="Adicione um WhatsApp para receber contatos dos clientes."
                     placeholder="(48) 99999-9999"
                     inputMode="numeric"
+                    type="tel"
+                    required
+                    className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                  />
+                </label>
+
+                <label className="grid gap-1.5 text-sm text-stone-700">
+                  Senha
+                  <input
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={(event) => {
+                      updateField("password", event.target.value);
+                      validatePasswordField(event.currentTarget);
+                    }}
+                    onInvalid={onFieldInvalid}
+                    data-required-message="Crie uma senha para acessar sua conta."
+                    placeholder="Minimo de 8 caracteres"
+                    minLength={8}
                     required
                     className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
                   />
@@ -317,11 +645,26 @@ export default function OnboardingMultiStepForm() {
 
               <div className="grid gap-4">
                 <label className="grid gap-1.5 text-sm text-stone-700">
-                  Descrição
-                  <textarea
-                    value={formData.description}
+                  Nome do Comércio
+                  <input
+                    value={formData.businessName}
                     onChange={(event) => {
-                      updateField("description", event.target.value);
+                      updateField("businessName", event.target.value);
+                      clearFieldError(event.currentTarget);
+                    }}
+                    onInvalid={onFieldInvalid}
+                    data-required-message="Informe o nome do seu comércio para publicar o perfil."
+                    placeholder="Ex: Empório da Serra"
+                    required
+                    className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                  />
+                </label>
+                <label className="grid gap-1.5 text-sm text-stone-700">
+                  Sobre
+                  <textarea
+                    value={formData.about}
+                    onChange={(event) => {
+                      updateField("about", event.target.value);
                       clearFieldError(event.currentTarget);
                     }}
                     onInvalid={onFieldInvalid}
@@ -334,50 +677,124 @@ export default function OnboardingMultiStepForm() {
                 </label>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="grid gap-1.5 text-sm text-stone-700">
-                    Bairro
-                    <select
-                      value={formData.neighborhood}
-                      onChange={(event) => {
-                        updateField("neighborhood", event.target.value);
-                        clearFieldError(event.currentTarget);
-                      }}
-                      onInvalid={onFieldInvalid}
-                      data-required-message="Selecione o bairro para melhorar a visibilidade local."
-                      required
-                      className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
-                    >
-                      <option value="">Selecione</option>
-                      {neighborhoods.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                  <div className="grid gap-1.5">
+                    <label className="grid gap-1.5 text-sm text-stone-700">
+                      CEP
+                      <input
+                        value={formData.zipcode}
+                        onChange={(event) => {
+                          const formattedZipcode = formatZipcode(
+                            event.target.value,
+                          );
+                          const cleanZipcode = formattedZipcode.replace(
+                            /\D/g,
+                            "",
+                          );
+
+                          updateField("zipcode", formattedZipcode);
+
+                          if (cleanZipcode.length < 8) {
+                            updateField("street", "");
+                            updateField("neighborhood", "");
+                            updateField("city", "");
+                            updateField("state", "");
+                            setCepFeedback("");
+                            setLastZipLookup("");
+                          }
+
+                          if (
+                            cleanZipcode.length === 8 &&
+                            cleanZipcode !== lastZipLookup
+                          ) {
+                            void lookupAddressByZipcode(cleanZipcode);
+                          }
+
+                          clearFieldError(event.currentTarget);
+                        }}
+                        onInvalid={onFieldInvalid}
+                        data-required-message="Informe o CEP para buscar o endereco automaticamente."
+                        placeholder="00000-000"
+                        inputMode="numeric"
+                        required
+                        className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                      />
+                    </label>
+
+                    {cepLoading ? (
+                      <p className="text-xs text-stone-600">
+                        Buscando endereco pelo CEP...
+                      </p>
+                    ) : null}
+
+                    {formData.street &&
+                    formData.neighborhood &&
+                    formData.city &&
+                    formData.state ? (
+                      <p className="rounded-xl border border-[#d6e9d5] bg-[#f3faf2] px-3.5 py-2.5 text-sm text-[#2f622c]">
+                        {`${formData.street}, ${formData.neighborhood} - ${formData.city} - ${formData.state}`}
+                      </p>
+                    ) : null}
+
+                    {cepFeedback ? (
+                      <p className="text-xs text-red-500">{cepFeedback}</p>
+                    ) : null}
+                  </div>
 
                   <label className="grid gap-1.5 text-sm text-stone-700">
                     Categoria
                     <select
                       value={formData.category}
                       onChange={(event) => {
-                        updateField("category", event.target.value);
+                        updateField(
+                          "category",
+                          event.target.value as ProfileCategory | "",
+                        );
+                        updateField("segment", "");
                         clearFieldError(event.currentTarget);
                       }}
                       onInvalid={onFieldInvalid}
-                      data-required-message="Escolha uma categoria para seu comércio aparecer nas buscas certas."
+                      data-required-message="Escolha uma categoria para seu comercio aparecer nas buscas certas."
                       required
                       className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
                     >
                       <option value="">Selecione</option>
-                      {categories.map((item) => (
+                      {(
+                        Object.values(ProfileCategory) as ProfileCategory[]
+                      ).map((item) => (
                         <option key={item} value={item}>
-                          {item}
+                          {profileCategoryLabels[item]}
                         </option>
                       ))}
                     </select>
                   </label>
                 </div>
+
+                <label className="grid gap-1.5 text-sm text-stone-700">
+                  Segmento
+                  <select
+                    value={formData.segment}
+                    onChange={(event) => {
+                      updateField("segment", event.target.value);
+                      clearFieldError(event.currentTarget);
+                    }}
+                    onInvalid={onFieldInvalid}
+                    data-required-message="Selecione um segmento para refinar a categoria do seu comercio."
+                    required
+                    disabled={!formData.category}
+                    className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30 disabled:cursor-not-allowed disabled:bg-stone-100"
+                  >
+                    <option value="">
+                      {formData.category
+                        ? "Selecione um segmento"
+                        : "Selecione uma categoria primeiro"}
+                    </option>
+                    {availableSegments.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
                 <label className="grid gap-1.5 text-sm text-stone-700">
                   Logo do Comércio
@@ -423,10 +840,10 @@ export default function OnboardingMultiStepForm() {
                     <div className="flex items-center rounded-xl border border-stone-200 bg-white px-3">
                       <MessageCircle className="h-4 w-4 text-stone-500" />
                       <input
-                        value={formData.supportWhatsapp}
+                        value={formData.businessWhatsapp}
                         onChange={(event) =>
                           onWhatsappChange(
-                            "supportWhatsapp",
+                            "businessWhatsapp",
                             event.target.value,
                           )
                         }
