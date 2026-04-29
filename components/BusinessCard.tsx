@@ -6,6 +6,7 @@ import {
   Crown,
   ChevronsRight,
   MessageCircleMore,
+  ChevronRight,
 } from "lucide-react";
 import { Business } from "@/lib/types";
 
@@ -118,11 +119,11 @@ export default function BusinessCard({
           {isFeatured && (
             <Link
               href={`/anunciante/${slug}`}
-              className="mt-auto pt-3 flex items-center justify-center gap-2 w-full bg-amber-100 hover:bg-amber-200 active:scale-[0.97] text-amber-900 font-semibold text-sm py-3 rounded-xl transition-all touch-manipulation border border-amber-300"
+              className="mt-auto pt-3 flex items-center justify-center gap-2 w-full bg-slate-100 text-slate-500 active:scale-[0.97] font-semibold text-sm py-3 rounded-xl transition-all touch-manipulation"
               aria-label={`Visitar página de ${name}`}
             >
-              Detalhes
-              <ChevronsRight
+              Ver perfil
+              <ChevronRight
                 className="w-4 h-4"
                 aria-hidden="true"
                 strokeWidth={3}
