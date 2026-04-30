@@ -41,6 +41,7 @@ type FormData = {
   businessWhatsapp: string;
   email: string;
   selectedPlan: "free" | "premium";
+  role: "" | "ADMIN" | "MANAGER" | "EMPLOYER";
   city: string;
   state: string;
 };
@@ -309,6 +310,7 @@ export default function OnboardingMultiStepForm() {
     businessWhatsapp: "",
     email: "",
     selectedPlan: "free",
+    role: "",
     state: "SC",
     city: "Águas Mornas",
   });
@@ -332,6 +334,7 @@ export default function OnboardingMultiStepForm() {
         businessWhatsapp: draft.businessWhatsapp ?? prev.businessWhatsapp,
         email: draft.email ?? prev.email,
         selectedPlan: draft.selectedPlan ?? prev.selectedPlan,
+        role: draft.role ?? prev.role,
         state: draft.state ?? prev.state,
         city: draft.city ?? prev.city,
       }));
@@ -526,6 +529,7 @@ export default function OnboardingMultiStepForm() {
 
     payload.append("businessWhatsapp", formData.businessWhatsapp);
     payload.append("selectedPlan", formData.selectedPlan);
+    payload.append("role", formData.role);
     if (formData.logoFile) {
       const normalizedFile = normalizeImageFile(formData.logoFile);
 
@@ -892,6 +896,75 @@ export default function OnboardingMultiStepForm() {
                     ) : null}
                   </div>
                 </label>
+
+                <div className="grid gap-2 rounded-xl border border-[#cde4cc] bg-[#f4faf4] px-3.5 py-3">
+                  <p className="text-sm font-semibold text-[#2f622c]">
+                    Você é proprietário?
+                  </p>
+
+                  <label className="flex items-center gap-2 text-sm text-stone-700">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="ADMIN"
+                      checked={formData.role === "ADMIN"}
+                      onChange={(event) => {
+                        updateField(
+                          "role",
+                          event.target.value as FormData["role"],
+                        );
+                        clearFieldError(event.currentTarget);
+                      }}
+                      onInvalid={onFieldInvalid}
+                      data-required-message="Selecione qual e a sua funcao no comercio."
+                      required
+                      className="h-4 w-4 border-2 border-[#9dcb9a] accent-[#2f622c]"
+                    />
+                    Proprietário
+                  </label>
+
+                  <label className="flex items-center gap-2 text-sm text-stone-700">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="MANAGER"
+                      checked={formData.role === "MANAGER"}
+                      onChange={(event) => {
+                        updateField(
+                          "role",
+                          event.target.value as FormData["role"],
+                        );
+                        clearFieldError(event.currentTarget);
+                      }}
+                      onInvalid={onFieldInvalid}
+                      data-required-message="Selecione qual e a sua funcao no comercio."
+                      required
+                      className="h-4 w-4 border-2 border-[#9dcb9a] accent-[#2f622c]"
+                    />
+                    Gerente
+                  </label>
+
+                  <label className="flex items-center gap-2 text-sm text-stone-700">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="EMPLOYER"
+                      checked={formData.role === "EMPLOYER"}
+                      onChange={(event) => {
+                        updateField(
+                          "role",
+                          event.target.value as FormData["role"],
+                        );
+                        clearFieldError(event.currentTarget);
+                      }}
+                      onInvalid={onFieldInvalid}
+                      data-required-message="Selecione qual e a sua funcao no comercio."
+                      required
+                      className="h-4 w-4 border-2 border-[#9dcb9a] accent-[#2f622c]"
+                    />
+                    Funcionário
+                  </label>
+                </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="grid gap-1.5 text-sm text-stone-700">
