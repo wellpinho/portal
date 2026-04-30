@@ -4,6 +4,7 @@ import {
   ChangeEvent,
   FormEvent,
   InvalidEvent,
+  startTransition,
   useEffect,
   useMemo,
   useRef,
@@ -290,35 +291,55 @@ export default function OnboardingMultiStepForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [cepLoading, setCepLoading] = useState(false);
   const [cepFeedback, setCepFeedback] = useState("");
-  const [lastZipLookup, setLastZipLookup] = useState(() => {
-    const draft = loadFormDraft();
-    if (draft.zipcode && draft.street) {
-      return draft.zipcode.replace(/\D/g, "");
-    }
-    return "";
+  const [samePhone, setSamePhone] = useState(false);
+  const [lastZipLookup, setLastZipLookup] = useState("");
+  const [formData, setFormData] = useState<FormData>({
+    ownerName: "",
+    businessName: "",
+    ownerWhatsapp: "",
+    password: "",
+    about: "",
+    zipcode: "",
+    neighborhood: "",
+    street: "",
+    category: "",
+    segment: "",
+    logoFile: null,
+    instagram: "",
+    businessWhatsapp: "",
+    email: "",
+    selectedPlan: "free",
+    state: "SC",
+    city: "Águas Mornas",
   });
-  const [formData, setFormData] = useState<FormData>(() => {
+
+  useEffect(() => {
     const draft = loadFormDraft();
-    return {
-      ownerName: draft.ownerName ?? "",
-      businessName: draft.businessName ?? "",
-      ownerWhatsapp: draft.ownerWhatsapp ?? "",
-      password: "",
-      about: draft.about ?? "",
-      zipcode: draft.zipcode ?? "",
-      neighborhood: draft.neighborhood ?? "",
-      street: draft.street ?? "",
-      category: draft.category ?? "",
-      segment: draft.segment ?? "",
-      logoFile: null,
-      instagram: draft.instagram ?? "",
-      businessWhatsapp: draft.businessWhatsapp ?? "",
-      email: draft.email ?? "",
-      selectedPlan: draft.selectedPlan ?? "free",
-      state: draft.state ?? "SC",
-      city: draft.city ?? "Águas Mornas",
-    };
-  });
+    if (Object.keys(draft).length === 0) return;
+    startTransition(() => {
+      setFormData((prev) => ({
+        ...prev,
+        ownerName: draft.ownerName ?? prev.ownerName,
+        businessName: draft.businessName ?? prev.businessName,
+        ownerWhatsapp: draft.ownerWhatsapp ?? prev.ownerWhatsapp,
+        about: draft.about ?? prev.about,
+        zipcode: draft.zipcode ?? prev.zipcode,
+        neighborhood: draft.neighborhood ?? prev.neighborhood,
+        street: draft.street ?? prev.street,
+        category: draft.category ?? prev.category,
+        segment: draft.segment ?? prev.segment,
+        instagram: draft.instagram ?? prev.instagram,
+        businessWhatsapp: draft.businessWhatsapp ?? prev.businessWhatsapp,
+        email: draft.email ?? prev.email,
+        selectedPlan: draft.selectedPlan ?? prev.selectedPlan,
+        state: draft.state ?? prev.state,
+        city: draft.city ?? prev.city,
+      }));
+      if (draft.zipcode && draft.street) {
+        setLastZipLookup(draft.zipcode.replace(/\D/g, ""));
+      }
+    });
+  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -888,24 +909,48 @@ export default function OnboardingMultiStepForm() {
                     </div>
                   </label>
 
-                  <label className="grid gap-1.5 text-sm text-stone-700">
-                    WhatsApp de Atendimento
-                    <div className="flex items-center rounded-xl border border-stone-200 bg-white px-3">
-                      <MessageCircle className="h-4 w-4 text-stone-500" />
+                  <div className="grid gap-1.5">
+                    <span className="text-sm text-stone-700">
+                      WhatsApp de Atendimento
+                    </span>
+                    <label className="flex cursor-pointer items-center gap-2 text-sm text-stone-600">
                       <input
-                        value={formData.businessWhatsapp}
-                        onChange={(event) =>
-                          onWhatsappChange(
-                            "businessWhatsapp",
-                            event.target.value,
-                          )
-                        }
-                        placeholder="(48) 99999-9999"
-                        inputMode="numeric"
-                        className="w-full bg-transparent px-2 py-2.5 outline-none"
+                        type="checkbox"
+                        checked={samePhone}
+                        onChange={(event) => {
+                          const checked = event.target.checked;
+                          setSamePhone(checked);
+                          if (checked) {
+                            updateField(
+                              "businessWhatsapp",
+                              formData.ownerWhatsapp,
+                            );
+                          } else {
+                            updateField("businessWhatsapp", "");
+                          }
+                        }}
+                        className="h-4 w-4 accent-[#3D7A3A]"
                       />
-                    </div>
-                  </label>
+                      Usar mesmo telefone
+                    </label>
+                    {!samePhone && (
+                      <div className="flex items-center rounded-xl border border-stone-200 bg-white px-3">
+                        <MessageCircle className="h-4 w-4 text-stone-500" />
+                        <input
+                          value={formData.businessWhatsapp}
+                          onChange={(event) =>
+                            onWhatsappChange(
+                              "businessWhatsapp",
+                              event.target.value,
+                            )
+                          }
+                          placeholder="(48) 99999-9999"
+                          inputMode="numeric"
+                          className="w-full bg-transparent px-2 py-2.5 outline-none"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
