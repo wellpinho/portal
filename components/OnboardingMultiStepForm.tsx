@@ -4,6 +4,7 @@ import {
   ChangeEvent,
   FormEvent,
   InvalidEvent,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -166,6 +167,20 @@ const profileCategoryLabels: Record<ProfileCategory, string> = {
 
 const TOTAL_STEPS = 3;
 
+const ONBOARDING_STORAGE_KEY = "onboarding_form_draft";
+
+type StoredFormData = Omit<FormData, "logoFile" | "password">;
+
+function loadFormDraft(): Partial<StoredFormData> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(ONBOARDING_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as Partial<StoredFormData>) : {};
+  } catch {
+    return {};
+  }
+}
+
 const allowedImageMimeTypes = [
   "image/jpeg",
   "image/jpg",
@@ -192,13 +207,19 @@ function getImageMimeTypeFromName(fileName: string): string | null {
 }
 
 function normalizeImageFile(file: File): File | null {
-  const detectedType = file.type || getImageMimeTypeFromName(file.name);
+  const browserMimeType = file.type?.toLowerCase().trim();
+  const mimeTypeFromName = getImageMimeTypeFromName(file.name);
+
+  const detectedType =
+    browserMimeType && allowedImageMimeTypes.includes(browserMimeType)
+      ? browserMimeType
+      : mimeTypeFromName;
 
   if (!detectedType || !allowedImageMimeTypes.includes(detectedType)) {
     return null;
   }
 
-  if (file.type === detectedType) {
+  if (browserMimeType === detectedType) {
     return file;
   }
 
@@ -269,26 +290,41 @@ export default function OnboardingMultiStepForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [cepLoading, setCepLoading] = useState(false);
   const [cepFeedback, setCepFeedback] = useState("");
-  const [lastZipLookup, setLastZipLookup] = useState("");
-  const [formData, setFormData] = useState<FormData>({
-    ownerName: "",
-    businessName: "",
-    ownerWhatsapp: "",
-    password: "",
-    about: "",
-    zipcode: "",
-    neighborhood: "",
-    street: "",
-    category: "",
-    segment: "",
-    logoFile: null,
-    instagram: "",
-    businessWhatsapp: "",
-    email: "",
-    selectedPlan: "free",
-    state: "SC",
-    city: "Águas Mornas",
+  const [lastZipLookup, setLastZipLookup] = useState(() => {
+    const draft = loadFormDraft();
+    if (draft.zipcode && draft.street) {
+      return draft.zipcode.replace(/\D/g, "");
+    }
+    return "";
   });
+  const [formData, setFormData] = useState<FormData>(() => {
+    const draft = loadFormDraft();
+    return {
+      ownerName: draft.ownerName ?? "",
+      businessName: draft.businessName ?? "",
+      ownerWhatsapp: draft.ownerWhatsapp ?? "",
+      password: "",
+      about: draft.about ?? "",
+      zipcode: draft.zipcode ?? "",
+      neighborhood: draft.neighborhood ?? "",
+      street: draft.street ?? "",
+      category: draft.category ?? "",
+      segment: draft.segment ?? "",
+      logoFile: null,
+      instagram: draft.instagram ?? "",
+      businessWhatsapp: draft.businessWhatsapp ?? "",
+      email: draft.email ?? "",
+      selectedPlan: draft.selectedPlan ?? "free",
+      state: draft.state ?? "SC",
+      city: draft.city ?? "Águas Mornas",
+    };
+  });
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { logoFile, password, ...dataToStore } = formData;
+    localStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(dataToStore));
+  }, [formData]);
 
   const progress = useMemo(() => (step / TOTAL_STEPS) * 100, [step]);
   const availableSegments = useMemo(
@@ -430,6 +466,20 @@ export default function OnboardingMultiStepForm() {
       return;
     }
 
+    const cleanZipcode = formData.zipcode.replace(/\D/g, "");
+    const hasValidZipcodeLookup =
+      cleanZipcode.length === 8 &&
+      cleanZipcode === lastZipLookup &&
+      Boolean(formData.street.trim());
+
+    if (!hasValidZipcodeLookup) {
+      setStep(2);
+      setCepFeedback(
+        "Informe um CEP valido para preencher a rua antes de continuar.",
+      );
+      return;
+    }
+
     const payload = new window.FormData();
     payload.append("ownerName", formData.ownerName);
     payload.append("email", formData.email);
@@ -437,6 +487,8 @@ export default function OnboardingMultiStepForm() {
     payload.append("ownerWhatsapp", formData.ownerWhatsapp);
     payload.append("businessName", formData.businessName);
     payload.append("about", formData.about);
+    payload.append("zipcode", cleanZipcode);
+    payload.append("street", formData.street.trim());
     payload.append("neighborhood", formData.neighborhood);
     payload.append("city", formData.city);
     payload.append("state", formData.state);
@@ -476,6 +528,7 @@ export default function OnboardingMultiStepForm() {
       return;
     }
 
+    localStorage.removeItem(ONBOARDING_STORAGE_KEY);
     // TODO: redirecionar ou exibir confirmação de sucesso
   }
 
