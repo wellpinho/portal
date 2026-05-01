@@ -160,17 +160,14 @@ export const FooterComponent = () => {
             <ul className="space-y-3">
               {services.map((service, index) => (
                 <li key={index}>
-                  <Link
-                    href={service.href}
-                    className="text-sm hover:text-white hover:translate-x-1 transition-all duration-200 footer-link"
-                  >
+                  <div className="text-sm hover:text-white hover:translate-x-1 transition-all duration-200 footer-link">
                     <div>
                       <span className="font-medium">{service.name}</span>
                       <p className="text-xs text-gray-500 mt-1">
                         {service.description}
                       </p>
                     </div>
-                  </Link>
+                  </div>
                 </li>
               ))}
             </ul>

@@ -70,9 +70,11 @@ export enum ProfileCategory {
 
 export const CategorySegments: Record<ProfileCategory, string[]> = {
   [ProfileCategory.GASTRONOMIA]: [
+    "Doces e Salgados",
     "Bar e Choperia",
     "Restaurante",
     "Lanchonete",
+    "Sorveteria",
     "Cafeteria",
     "Pizzaria",
     "Padaria",
@@ -245,6 +247,11 @@ function formatWhatsapp(value: string): string {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
+function isValidBrazilMobilePhone(value: string): boolean {
+  const digits = value.replace(/\D/g, "");
+  return /^[1-9]{2}9\d{8}$/.test(digits);
+}
+
 function formatZipcode(value: string): string {
   const digits = value.replace(/\D/g, "").slice(0, 8);
 
@@ -294,6 +301,27 @@ function validatePasswordField(field: HTMLInputElement): void {
 
   if (isSequentialNumericPassword(field.value)) {
     field.setCustomValidity("A senha nao pode ser uma sequencia numerica.");
+    return;
+  }
+
+  field.setCustomValidity("");
+}
+
+function validateWhatsappField(field: HTMLInputElement): void {
+  const digits = field.value.replace(/\D/g, "");
+
+  if (field.required && digits.length === 0) {
+    field.setCustomValidity(
+      field.dataset.requiredMessage ||
+        "Adicione um WhatsApp para receber contatos dos clientes.",
+    );
+    return;
+  }
+
+  if (digits.length > 0 && !isValidBrazilMobilePhone(digits)) {
+    field.setCustomValidity(
+      "Informe um numero de celular valido no formato (DDD) 9XXXX-XXXX.",
+    );
     return;
   }
 
@@ -432,6 +460,14 @@ export default function OnboardingMultiStepForm() {
   function onFieldInvalid(event: InvalidEvent<FormField>) {
     const field = event.currentTarget;
 
+    if (
+      field instanceof HTMLInputElement &&
+      (field.name === "ownerWhatsapp" || field.name === "businessWhatsapp")
+    ) {
+      validateWhatsappField(field);
+      return;
+    }
+
     if (field.validity.valueMissing) {
       field.setCustomValidity(
         field.dataset.requiredMessage ||
@@ -473,6 +509,13 @@ export default function OnboardingMultiStepForm() {
       if (field instanceof HTMLInputElement && field.name === "password") {
         validatePasswordField(field);
       }
+
+      if (
+        field instanceof HTMLInputElement &&
+        (field.name === "ownerWhatsapp" || field.name === "businessWhatsapp")
+      ) {
+        validateWhatsappField(field);
+      }
     }
 
     const invalidField = fields.find((field) => !field.checkValidity());
@@ -509,6 +552,46 @@ export default function OnboardingMultiStepForm() {
     const cleanZipcode = formData.zipcode.replace(/\D/g, "");
     const cleanOwnerWhatsapp = formData.ownerWhatsapp.replace(/\D/g, "");
     const cleanBusinessWhatsapp = formData.businessWhatsapp.replace(/\D/g, "");
+
+    if (!isValidBrazilMobilePhone(cleanOwnerWhatsapp)) {
+      setStep(1);
+      const ownerWhatsappField =
+        formRef.current?.querySelector<HTMLInputElement>(
+          'input[name="ownerWhatsapp"]',
+        );
+
+      if (ownerWhatsappField) {
+        ownerWhatsappField.setCustomValidity(
+          "Informe um numero de celular valido no formato (DDD) 9XXXX-XXXX.",
+        );
+        ownerWhatsappField.reportValidity();
+        ownerWhatsappField.focus();
+      }
+
+      return;
+    }
+
+    if (
+      cleanBusinessWhatsapp &&
+      !isValidBrazilMobilePhone(cleanBusinessWhatsapp)
+    ) {
+      setStep(2);
+      const businessWhatsappField =
+        formRef.current?.querySelector<HTMLInputElement>(
+          'input[name="businessWhatsapp"]',
+        );
+
+      if (businessWhatsappField) {
+        businessWhatsappField.setCustomValidity(
+          "Informe um numero de celular valido no formato (DDD) 9XXXX-XXXX.",
+        );
+        businessWhatsappField.reportValidity();
+        businessWhatsappField.focus();
+      }
+
+      return;
+    }
+
     const hasValidZipcodeLookup =
       cleanZipcode.length === 8 &&
       cleanZipcode === lastZipLookup &&
@@ -696,6 +779,7 @@ export default function OnboardingMultiStepForm() {
                 <label className="grid gap-1.5 text-sm text-stone-700">
                   WhatsApp
                   <input
+                    name="ownerWhatsapp"
                     value={formData.ownerWhatsapp}
                     onChange={(event) => {
                       onWhatsappChange("ownerWhatsapp", event.target.value);
@@ -1036,14 +1120,18 @@ export default function OnboardingMultiStepForm() {
                       <div className="flex items-center rounded-xl border border-stone-200 bg-white px-3">
                         <MessageCircle className="h-4 w-4 text-stone-500" />
                         <input
+                          name="businessWhatsapp"
                           value={formData.businessWhatsapp}
-                          onChange={(event) =>
+                          onChange={(event) => {
                             onWhatsappChange(
                               "businessWhatsapp",
                               event.target.value,
-                            )
-                          }
+                            );
+                            clearFieldError(event.currentTarget);
+                          }}
+                          onInvalid={onFieldInvalid}
                           placeholder="(48) 99999-9999"
+                          type="tel"
                           inputMode="numeric"
                           className="w-full bg-transparent px-2 py-2.5 outline-none"
                         />
