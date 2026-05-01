@@ -41,7 +41,7 @@ type FormData = {
   businessWhatsapp: string;
   email: string;
   selectedPlan: "free" | "premium";
-  role: "" | "ADMIN" | "MANAGER" | "EMPLOYER";
+  userType: "" | "ADMIN" | "MANAGER" | "EMPLOYER";
   city: string;
   state: string;
 };
@@ -310,7 +310,7 @@ export default function OnboardingMultiStepForm() {
     businessWhatsapp: "",
     email: "",
     selectedPlan: "free",
-    role: "",
+    userType: "",
     state: "SC",
     city: "Águas Mornas",
   });
@@ -334,7 +334,7 @@ export default function OnboardingMultiStepForm() {
         businessWhatsapp: draft.businessWhatsapp ?? prev.businessWhatsapp,
         email: draft.email ?? prev.email,
         selectedPlan: draft.selectedPlan ?? prev.selectedPlan,
-        role: draft.role ?? prev.role,
+        userType: draft.userType ?? prev.userType,
         state: draft.state ?? prev.state,
         city: draft.city ?? prev.city,
       }));
@@ -491,6 +491,8 @@ export default function OnboardingMultiStepForm() {
     }
 
     const cleanZipcode = formData.zipcode.replace(/\D/g, "");
+    const cleanOwnerWhatsapp = formData.ownerWhatsapp.replace(/\D/g, "");
+    const cleanBusinessWhatsapp = formData.businessWhatsapp.replace(/\D/g, "");
     const hasValidZipcodeLookup =
       cleanZipcode.length === 8 &&
       cleanZipcode === lastZipLookup &&
@@ -508,7 +510,7 @@ export default function OnboardingMultiStepForm() {
     payload.append("ownerName", formData.ownerName);
     payload.append("email", formData.email);
     payload.append("password", formData.password);
-    payload.append("ownerWhatsapp", formData.ownerWhatsapp);
+    payload.append("ownerWhatsapp", cleanOwnerWhatsapp);
     payload.append("businessName", formData.businessName);
     payload.append("about", formData.about);
     payload.append("zipcode", cleanZipcode);
@@ -527,9 +529,9 @@ export default function OnboardingMultiStepForm() {
       payload.append("socialLinks", JSON.stringify(socialLinks));
     }
 
-    payload.append("businessWhatsapp", formData.businessWhatsapp);
+    payload.append("businessWhatsapp", cleanBusinessWhatsapp);
     payload.append("selectedPlan", formData.selectedPlan);
-    payload.append("role", formData.role);
+    payload.append("userType", formData.userType);
     if (formData.logoFile) {
       const normalizedFile = normalizeImageFile(formData.logoFile);
 
@@ -905,13 +907,13 @@ export default function OnboardingMultiStepForm() {
                   <label className="flex items-center gap-2 text-sm text-stone-700">
                     <input
                       type="radio"
-                      name="role"
+                      name="userType"
                       value="ADMIN"
-                      checked={formData.role === "ADMIN"}
+                      checked={formData.userType === "ADMIN"}
                       onChange={(event) => {
                         updateField(
-                          "role",
-                          event.target.value as FormData["role"],
+                          "userType",
+                          event.target.value as FormData["userType"],
                         );
                         clearFieldError(event.currentTarget);
                       }}
@@ -926,13 +928,13 @@ export default function OnboardingMultiStepForm() {
                   <label className="flex items-center gap-2 text-sm text-stone-700">
                     <input
                       type="radio"
-                      name="role"
+                      name="userType"
                       value="MANAGER"
-                      checked={formData.role === "MANAGER"}
+                      checked={formData.userType === "MANAGER"}
                       onChange={(event) => {
                         updateField(
-                          "role",
-                          event.target.value as FormData["role"],
+                          "userType",
+                          event.target.value as FormData["userType"],
                         );
                         clearFieldError(event.currentTarget);
                       }}
@@ -947,13 +949,13 @@ export default function OnboardingMultiStepForm() {
                   <label className="flex items-center gap-2 text-sm text-stone-700">
                     <input
                       type="radio"
-                      name="role"
+                      name="userType"
                       value="EMPLOYER"
-                      checked={formData.role === "EMPLOYER"}
+                      checked={formData.userType === "EMPLOYER"}
                       onChange={(event) => {
                         updateField(
-                          "role",
-                          event.target.value as FormData["role"],
+                          "userType",
+                          event.target.value as FormData["userType"],
                         );
                         clearFieldError(event.currentTarget);
                       }}
