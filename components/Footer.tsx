@@ -31,7 +31,7 @@ export const FooterComponent = () => {
     {
       name: "Serviços Profissionais",
       href: "/profiles?sector=servicos-profissionais",
-      description: "(Advogados, Contadores, Pedreiros)",
+      description: "(Advogados, Contadores, Construção e Manutenção)",
     },
     {
       name: "Turismo e Lazer",
@@ -41,11 +41,11 @@ export const FooterComponent = () => {
   ];
 
   const companyLinks = [
-    // { name: "Sobre Nós", href: "/about" },
-    //{ name: "Como Funciona", href: "/how-it-works" },
-    // { name: "Para Profissionais", href: "/professionals" },
-    // { name: "Central de Ajuda", href: "/help" },
-    // { name: "Blog", href: "/blog" },
+    { name: "Sobre Nós", href: "/about" },
+    { name: "Como Funciona", href: "/how-it-works" },
+    { name: "Para Profissionais", href: "/professionals" },
+    { name: "Central de Ajuda", href: "/help" },
+    { name: "Blog", href: "/blog" },
   ];
 
   const legalLinks = [
@@ -96,7 +96,7 @@ export const FooterComponent = () => {
     {
       icon: <ShieldCheckIcon size={24} />,
       value: "Crescimento constante",
-      label: "Plataforma preparada para escalar junto com você",
+      label: "Fortalecendo a economia local e a comunidade",
     },
   ];
 
@@ -125,7 +125,7 @@ export const FooterComponent = () => {
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Company Info */}
           <div className="lg:col-span-1 footer-section">
             <div className="flex items-center gap-3 mb-6 group footer-logo-container">
@@ -133,8 +133,8 @@ export const FooterComponent = () => {
             </div>
 
             <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-              Sua plataforma confiável para encontrar os melhores profissionais
-              da sua região. Qualidade, segurança e praticidade em um só lugar.
+              A plataforma oficial para encontrar os melhores profissionais e
+              comércios de Águas Mornas.
             </p>
 
             {/* Contact Info */}
@@ -188,27 +188,25 @@ export const FooterComponent = () => {
 
           {/* Company */}
           {/* <div className="footer-section">
-                        <h4 className="text-white font-semibold mb-6">
-                            Empresa
-                        </h4>
-                        <ul className="space-y-3">
-                            {companyLinks.map((link, index) => (
-                                <li key={index}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm hover:text-white hover:translate-x-1 transition-all duration-200 footer-link"
-                                    >
-                                        <span className="w-1 h-1 bg-[#97B067] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                                        {link.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div> */}
+            <h4 className="text-white font-semibold mb-6">Empresa</h4>
+            <ul className="space-y-3">
+              {companyLinks.map((link, index) => (
+                <li key={index}>
+                  <Link
+                    href={link.href}
+                    className="text-sm hover:text-white hover:translate-x-1 transition-all duration-200 footer-link"
+                  >
+                    <span className="w-1 h-1 bg-[#97B067] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div> */}
 
           {/* Legal & Social */}
           <div className="footer-section">
-            <h4 className="text-white font-semibold mb-6">Legal</h4>
+            {/* <h4 className="text-white font-semibold mb-6">Legal</h4>
             <ul className="space-y-3 mb-8">
               {legalLinks.map((link, index) => (
                 <li key={index}>
@@ -220,7 +218,7 @@ export const FooterComponent = () => {
                   </Link>
                 </li>
               ))}
-            </ul>
+            </ul> */}
 
             {/* Social Media */}
             <div>
@@ -247,7 +245,7 @@ export const FooterComponent = () => {
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <p className="text-sm text-gray-400 text-center">
+          <p className="text-sm text-gray-400">
             © {currentYear} Comércios Locais. Todos os direitos reservados.
           </p>
         </div>

@@ -10,14 +10,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  MapPin,
-  Building2,
-  ChevronDown,
-  CirclePlus,
-  X,
-  Megaphone,
-} from "lucide-react";
+import { MapPin, Building2, ChevronDown, X, Megaphone } from "lucide-react";
 import {
   CityRoute,
   DEFAULT_CITY_ROUTE,
