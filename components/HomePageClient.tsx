@@ -150,7 +150,6 @@ function LoadingBusinessCard() {
 }
 
 export default function HomePageClient({
-  businesses,
   selectedNeighborhood = "Todos os bairros",
 }: HomePageClientProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category>("Todos");
@@ -158,9 +157,16 @@ export default function HomePageClient({
   const [isLoadingBusinesses, setIsLoadingBusinesses] = useState(true);
 
   useEffect(() => {
-    const controller = new AbortController();
+    let currentController: AbortController | null = null;
 
     async function fetchBusinessesFromApi() {
+      currentController?.abort();
+      const controller = new AbortController();
+      currentController = controller;
+      const timeoutId = window.setTimeout(() => controller.abort(), 8000);
+
+      setIsLoadingBusinesses(true);
+
       try {
         const response = await fetch("/api/profile/list?page=1&limit=5", {
           method: "GET",
@@ -170,10 +176,8 @@ export default function HomePageClient({
 
         const data: unknown = await response.json().catch(() => null);
 
-        console.log("[HomePageClient] profile/list response:", data);
-
         if (!response.ok) {
-          setApiBusinesses(businesses);
+          setApiBusinesses([]);
           return;
         }
 
@@ -184,19 +188,26 @@ export default function HomePageClient({
           return;
         }
 
-        console.log("[HomePageClient] profile/list fetch error:", error);
-        setApiBusinesses(businesses);
+        setApiBusinesses([]);
       } finally {
+        window.clearTimeout(timeoutId);
         setIsLoadingBusinesses(false);
       }
     }
 
     void fetchBusinessesFromApi();
 
-    return () => {
-      controller.abort();
+    const onPageShow = () => {
+      void fetchBusinessesFromApi();
     };
-  }, [businesses]);
+
+    window.addEventListener("pageshow", onPageShow);
+
+    return () => {
+      window.removeEventListener("pageshow", onPageShow);
+      currentController?.abort();
+    };
+  }, []);
 
   const businessesToDisplay = useMemo(() => apiBusinesses, [apiBusinesses]);
 

@@ -19,38 +19,25 @@ export const FooterComponent = () => {
   const currentYear = new Date().getFullYear();
   const services = [
     {
-      name: "Mecânicos",
-      href: "/profiles?sector=automotivo",
-      description: "Mecânico carros leve",
+      name: "Gastronomia",
+      href: "/profiles?sector=gastronomia",
+      description: "(Restaurantes, Cafés, Bares)",
     },
     {
-      href: "/profiles?sector=carros-pesados",
-      description: "Mecânico carros pesados",
+      name: "Saúde e Bem-estar",
+      href: "/profiles?sector=saude-e-bem-estar",
+      description: "(Farmácias, Clínicas, Academias)",
     },
     {
-      href: "/profiles?sector=motocicletas",
-      description: "Mecânico Motocicletas",
+      name: "Serviços Profissionais",
+      href: "/profiles?sector=servicos-profissionais",
+      description: "(Advogados, Contadores, Pedreiros)",
     },
     {
-      href: "/profiles?sector=bicicletas",
-      description: "Mecânico bicicletas",
+      name: "Turismo e Lazer",
+      href: "/profiles?sector=turismo-e-lazer",
+      description: "(Pousadas, chalés, Parques, Trilhas)",
     },
-    {
-      name: "Guinchos",
-      href: "/profiles?sector=guinchos",
-      description: "Guinchos | Socorro 24 horas",
-    },
-    {
-      name: "Borracharias",
-      href: "/profiles?sector=borracharias",
-      description: "Manutenção e reparo de pneus e rodas",
-    },
-    // {
-    //     icon: <BsTruckFlatbed size={18} className="text-[#97B067]" />,
-    //     name: "Guinchos",
-    //     href: "/winchs",
-    //     description: "Socorro 24 horas",
-    // },
   ];
 
   const companyLinks = [
@@ -190,7 +177,7 @@ export const FooterComponent = () => {
 
             <div className="mt-8">
               <Link
-                href="/contact"
+                href="/anunciante/onboarding"
                 className="inline-flex items-center gap-2 bg-[#85A055] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-baseGreen transition-all duration-200 hover:scale-105 footer-cta-button"
               >
                 <HeartIcon size={16} />
@@ -260,24 +247,9 @@ export const FooterComponent = () => {
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-400">
-              © {currentYear} Comércios Locais. Todos os direitos reservados.
-            </p>
-
-            <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-gray-400">
-              <div className="flex items-center gap-4">
-                <span>Feito com</span>
-                <HeartIcon size={16} className="text-red-500 footer-heart" />
-                <span>em Águas Mornas - SC</span>
-              </div>
-
-              {/* Visit Counter */}
-              {/* <div className="border-l border-gray-600 pl-4 ml-4 hidden md:block">
-                                <SimpleVisitCounter />
-                            </div> */}
-            </div>
-          </div>
+          <p className="text-sm text-gray-400 text-center">
+            © {currentYear} Comércios Locais. Todos os direitos reservados.
+          </p>
         </div>
       </div>
     </footer>
