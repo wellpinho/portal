@@ -4,7 +4,6 @@ import {
   MapPin,
   Star,
   Crown,
-  ChevronsRight,
   MessageCircleMore,
   ChevronRight,
 } from "lucide-react";
@@ -22,15 +21,20 @@ export default function BusinessCard({
   const {
     name,
     category,
+    segment,
     location,
     slug,
     phone,
     imageUrl,
-    isOpen,
     isFeatured,
     rating,
     reviewCount,
   } = business;
+  const cleanSegment = segment?.trim();
+  const badgeSegment = cleanSegment || category;
+  const whatsappMessage = encodeURIComponent(
+    `Ola! Encontrei ${name} no Comercios Locais e gostaria de mais informacoes.`,
+  );
 
   return (
     <article
@@ -61,14 +65,9 @@ export default function BusinessCard({
           </span>
         )}
 
-        {/* Open / Closed badge */}
-        <span
-          className={[
-            "absolute top-2 left-2 text-xs font-semibold px-2 py-0.5 rounded-full",
-            isOpen ? "bg-emerald-500 text-white" : "bg-stone-500 text-white",
-          ].join(" ")}
-        >
-          {isOpen ? "Aberto" : "Fechado"}
+        {/* Segment badge */}
+        <span className="absolute top-2 left-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-violet-600 text-white">
+          {badgeSegment}
         </span>
       </div>
 
@@ -89,21 +88,23 @@ export default function BusinessCard({
         </div>
 
         {/* Rating */}
-        <div className="flex items-center gap-1">
-          <Star
-            className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0"
-            aria-hidden="true"
-          />
-          <span className="text-xs font-semibold text-stone-700">
-            {rating.toFixed(1)}
-          </span>
-          <span className="text-xs text-stone-600">({reviewCount})</span>
-        </div>
+        {reviewCount > 0 && (
+          <div className="flex items-center gap-1">
+            <Star
+              className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0"
+              aria-hidden="true"
+            />
+            <span className="text-xs font-semibold text-stone-700">
+              {rating.toFixed(1)}
+            </span>
+            <span className="text-xs text-stone-600">({reviewCount})</span>
+          </div>
+        )}
 
         <div className="flex gap-2">
           {/* WhatsApp CTA */}
           <a
-            href={`https://wa.me/${phone}`}
+            href={`https://wa.me/${phone}?text=${whatsappMessage}`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 flex items-center justify-center gap-2 w-full bg-emerald-500 hover:bg-emerald-600 active:scale-[0.97] text-white font-semibold text-sm py-3 rounded-xl transition-all touch-manipulation"

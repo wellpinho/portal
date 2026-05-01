@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MessageCircleMore, Store } from "lucide-react";
 import { Business, Category } from "@/lib/types";
 import { getActiveCategoryViewLabel } from "@/lib/category-view-label";
@@ -16,14 +16,192 @@ interface HomePageClientProps {
   selectedNeighborhood?: string;
 }
 
+type ApiProfileItem = {
+  id?: number | string;
+  slug?: string;
+  businessName?: string;
+  businessWhatsapp?: string;
+  category?: string;
+  segment?: string;
+  plan?: string;
+  verified?: boolean;
+  avatar?: string;
+  reviews?: Array<{ score?: number }>;
+  address?: {
+    city?: string;
+    state?: string;
+    street?: string;
+    neighborhood?: string;
+  };
+};
+
+type ApiProfileListResponse = {
+  data?: ApiProfileItem[];
+};
+
+const FALLBACK_CATEGORY: Exclude<Category, "Todos"> = "Comércio";
+
+function toSlug(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+function toDigits(value: string | undefined): string {
+  return (value ?? "").replace(/\D/g, "");
+}
+
+function mapCategory(value: string | undefined): Exclude<Category, "Todos"> {
+  const normalized = (value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  if (normalized.includes("gastr")) return "Gastronomia";
+  if (normalized.includes("saude") || normalized.includes("beleza")) {
+    return "Saúde";
+  }
+  if (normalized.includes("agro") || normalized.includes("colonial")) {
+    return "Produtos Coloniais";
+  }
+  if (normalized.includes("serv") || normalized.includes("manut")) {
+    return "Serviços";
+  }
+  if (normalized.includes("automot")) return "Carro";
+  if (normalized.includes("constr") || normalized.includes("casa")) {
+    return "Construção";
+  }
+  if (normalized.includes("comerc") || normalized.includes("varejo")) {
+    return "Comércio";
+  }
+  if (normalized.includes("turismo") || normalized.includes("lazer")) {
+    return "Turismo";
+  }
+
+  return FALLBACK_CATEGORY;
+}
+
+function toBusinessList(data: unknown): Business[] {
+  const response = data as ApiProfileListResponse | null;
+  const items = Array.isArray(response?.data) ? response.data : [];
+
+  return items.map((item, index) => {
+    const name = item.businessName?.trim() || `Comércio ${index + 1}`;
+    const city = item.address?.city?.trim() || "Águas Mornas";
+    const state = item.address?.state?.trim() || "SC";
+    const neighborhood = item.address?.neighborhood?.trim() || city;
+    const street = item.address?.street?.trim() || "Endereço não informado";
+    const ratingRaw = Array.isArray(item.reviews)
+      ? item.reviews.map((review) => Number(review.score || 0))
+      : [];
+    const ratingAverage =
+      ratingRaw.length > 0
+        ? ratingRaw.reduce((sum, current) => sum + current, 0) /
+          ratingRaw.length
+        : 0;
+    const imageUrl =
+      item.avatar?.trim() ||
+      `https://picsum.photos/seed/${toSlug(name) || "comercio"}/400/300`;
+
+    return {
+      id: String(item.id ?? `${index + 1}`),
+      slug: item.slug?.trim() || toSlug(name),
+      name,
+      category: mapCategory(item.category),
+      segment: item.segment?.trim() || undefined,
+      location: `${neighborhood}, ${city}`,
+      address: `${street}, ${city} - ${state}`,
+      phone: toDigits(item.businessWhatsapp) || "5548999999999",
+      mapUrl: "https://maps.google.com",
+      imageUrl,
+      bannerUrl: imageUrl,
+      logoUrl: imageUrl,
+      galleryImages: [imageUrl, imageUrl, imageUrl, imageUrl],
+      isOpen: true,
+      isFeatured:
+        item.plan?.toLowerCase() === "premium" || Boolean(item.verified),
+      rating: Number.isFinite(ratingAverage) ? ratingAverage : 0,
+      reviewCount: ratingRaw.length,
+      description: `Conheça ${name} em ${city}.`,
+      workingHours: ["Horário não informado"],
+      paymentMethods: ["Pix"],
+      hasParking: false,
+    };
+  });
+}
+
+function LoadingBusinessCard() {
+  return (
+    <article className="overflow-hidden rounded-2xl border border-[#d5e8d4] bg-white shadow-sm">
+      <div className="h-40 w-full animate-pulse bg-linear-to-r from-[#e9f5e8] via-[#f8fbf8] to-[#e9f5e8]" />
+      <div className="space-y-3 p-3">
+        <div className="h-3.5 w-2/3 animate-pulse rounded-full bg-stone-200" />
+        <div className="h-3 w-1/3 animate-pulse rounded-full bg-emerald-100" />
+        <div className="h-3 w-3/4 animate-pulse rounded-full bg-stone-100" />
+        <div className="h-10 w-full animate-pulse rounded-xl bg-emerald-100" />
+      </div>
+    </article>
+  );
+}
+
 export default function HomePageClient({
   businesses,
   selectedNeighborhood = "Todos os bairros",
 }: HomePageClientProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category>("Todos");
+  const [apiBusinesses, setApiBusinesses] = useState<Business[]>([]);
+  const [isLoadingBusinesses, setIsLoadingBusinesses] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchBusinessesFromApi() {
+      try {
+        const response = await fetch("/api/profile/list?page=1&limit=5", {
+          method: "GET",
+          cache: "no-store",
+          signal: controller.signal,
+        });
+
+        const data: unknown = await response.json().catch(() => null);
+
+        console.log("[HomePageClient] profile/list response:", data);
+
+        if (!response.ok) {
+          setApiBusinesses(businesses);
+          return;
+        }
+
+        const mapped = toBusinessList(data);
+        setApiBusinesses(mapped);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+
+        console.log("[HomePageClient] profile/list fetch error:", error);
+        setApiBusinesses(businesses);
+      } finally {
+        setIsLoadingBusinesses(false);
+      }
+    }
+
+    void fetchBusinessesFromApi();
+
+    return () => {
+      controller.abort();
+    };
+  }, [businesses]);
+
+  const businessesToDisplay = useMemo(() => apiBusinesses, [apiBusinesses]);
 
   const filtered = useMemo(() => {
-    return businesses.filter((b) => {
+    return businessesToDisplay.filter((b) => {
       const matchesCategory =
         selectedCategory === "Todos" || b.category === selectedCategory;
 
@@ -34,7 +212,7 @@ export default function HomePageClient({
 
       return matchesCategory && matchesNeighborhood;
     });
-  }, [businesses, selectedCategory, selectedNeighborhood]);
+  }, [businessesToDisplay, selectedCategory, selectedNeighborhood]);
 
   const featured = filtered.filter((b) => b.isFeatured);
   const common = filtered.filter((b) => !b.isFeatured);
@@ -66,8 +244,18 @@ export default function HomePageClient({
         </div>
       </div>
 
+      {isLoadingBusinesses && (
+        <section className="mt-5">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <LoadingBusinessCard key={`loading-card-${index}`} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Empty state */}
-      {filtered.length === 0 && (
+      {!isLoadingBusinesses && filtered.length === 0 && (
         <section className="mx-auto flex max-w-lg flex-col items-center justify-center gap-4 py-20 text-center">
           <Store className="h-14 w-14 text-stone-600" aria-hidden="true" />
 
@@ -100,7 +288,7 @@ export default function HomePageClient({
       )}
 
       {/* Featured section */}
-      {featured.length > 0 && (
+      {!isLoadingBusinesses && featured.length > 0 && (
         <section aria-labelledby="section-destaque" className="mt-5">
           <h2
             id="section-destaque"
@@ -121,7 +309,7 @@ export default function HomePageClient({
       )}
 
       {/* Common section */}
-      {common.length > 0 && (
+      {!isLoadingBusinesses && common.length > 0 && (
         <section
           aria-labelledby="section-todos"
           className={featured.length > 0 ? "mt-8" : "mt-5"}

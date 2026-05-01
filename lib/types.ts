@@ -19,6 +19,7 @@ export interface Business {
   slug: string;
   name: string;
   category: Exclude<Category, "Todos">;
+  segment?: string;
   location: string;
   address: string;
   /** E.164-like number for wa.me (country + area + number, digits only) */

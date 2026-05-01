@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   CheckCheck,
   Crown,
@@ -20,6 +21,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { SiInstagram } from "react-icons/si";
+import { toCityPath } from "@/lib/locations";
 
 type Step = 1 | 2 | 3;
 
@@ -251,6 +253,17 @@ function formatZipcode(value: string): string {
   return `${digits.slice(0, 5)}-${digits.slice(5)}`;
 }
 
+function toSlug(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 function isSequentialNumericPassword(value: string): boolean {
   if (!/^\d+$/.test(value) || value.length < 2) return false;
 
@@ -288,10 +301,13 @@ function validatePasswordField(field: HTMLInputElement): void {
 }
 
 export default function OnboardingMultiStepForm() {
+  const router = useRouter();
   const [step, setStep] = useState<Step>(1);
   const formRef = useRef<HTMLFormElement>(null);
   const [cepLoading, setCepLoading] = useState(false);
   const [cepFeedback, setCepFeedback] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [publishedListingPath, setPublishedListingPath] = useState("");
   const [samePhone, setSamePhone] = useState(false);
   const [lastZipLookup, setLastZipLookup] = useState("");
   const [formData, setFormData] = useState<FormData>({
@@ -555,8 +571,16 @@ export default function OnboardingMultiStepForm() {
       return;
     }
 
+    const stateCode = formData.state.trim().toLowerCase();
+    const citySlug = toSlug(formData.city);
+    const listingPath = toCityPath(
+      stateCode || "sc",
+      citySlug || "aguas-mornas",
+    );
+
+    setPublishedListingPath(listingPath);
+    setShowSuccessModal(true);
     localStorage.removeItem(ONBOARDING_STORAGE_KEY);
-    // TODO: redirecionar ou exibir confirmação de sucesso
   }
 
   return (
@@ -1149,6 +1173,36 @@ export default function OnboardingMultiStepForm() {
           </div>
         </form>
       </div>
+
+      {showSuccessModal ? (
+        <div className="fixed inset-0 z-80 flex items-center justify-center bg-[#0f1f0e]/55 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-[#cde4cc] bg-white p-6 shadow-[0_24px_80px_rgba(20,45,18,0.35)]">
+            <h3 className="text-xl font-semibold text-[#1f3d1d]">
+              Comércio publicado com sucesso
+            </h3>
+            <p className="mt-2 text-sm text-stone-600">
+              Seu perfil já está disponível. Escolha para onde deseja ir agora.
+            </p>
+
+            <div className="mt-5 grid gap-2">
+              <button
+                type="button"
+                onClick={() => router.push(publishedListingPath)}
+                className="w-full rounded-xl bg-[#3D7A3A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#2f622c]"
+              >
+                Ver lista de comércios
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard")}
+                className="w-full rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 transition hover:bg-stone-50"
+              >
+                Ir para o painel
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
