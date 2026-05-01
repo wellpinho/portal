@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   ChangeEvent,
   FormEvent,
@@ -1233,14 +1234,22 @@ export default function OnboardingMultiStepForm() {
           </div>
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
-            <button
-              type="button"
-              onClick={previousStep}
-              disabled={step === 1}
-              className="rounded-xl border border-stone-200 px-4 py-2.5 text-sm font-semibold text-stone-600 transition hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Voltar
-            </button>
+            {step === 1 ? (
+              <Link
+                href="/"
+                className="rounded-xl border border-stone-200 px-4 py-2.5 text-sm font-semibold text-stone-600 transition hover:bg-stone-50 text-center"
+              >
+                Voltar a Home
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={previousStep}
+                className="rounded-xl border border-stone-200 px-4 py-2.5 text-sm font-semibold text-stone-600 transition hover:bg-stone-50"
+              >
+                Voltar
+              </button>
+            )}
 
             {step < TOTAL_STEPS ? (
               <button
