@@ -61,7 +61,6 @@ type CepLookupResponse = {
 
 const profileCategoryLabels: Record<ProfileCategory, string> = {
   [ProfileCategory.GASTRONOMIA]: "Gastronomia",
-  [ProfileCategory.SERVICOS_AUTOMOTIVOS]: "Servicos Automotivos",
   [ProfileCategory.AGRO_COLONIAIS]: "Agro e Coloniais",
   [ProfileCategory.SAUDE_BELEZA]: "Saude e Beleza",
   [ProfileCategory.COMERCIO_VAREJO]: "Comercio e Varejo",
