@@ -2,7 +2,7 @@ import { Sparkles } from "lucide-react";
 
 export default function GlobalHero() {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-emerald-50 via-white to-green-50 overflow-hidden">
+    <section className="relative py-16 sm:py-24 lg:py-32 bg-linear-to-br from-emerald-50 via-white to-green-50 overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 -right-40 w-80 h-80 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
@@ -21,7 +21,7 @@ export default function GlobalHero() {
           {/* Title */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-stone-900 mb-6 leading-tight">
             Apoie o{" "}
-            <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
               Comércio Local
             </span>
           </h1>

@@ -96,9 +96,8 @@ export const CITY_CONFIGS: CityConfig[] = [
     state: "SC",
     name: "Águas Mornas",
     displayName: "Águas Mornas, SC",
-    heroTitle: "Bem-vindo aos Comércios Locais de Águas Mornas",
-    heroSubtitle:
-      "Apoie o comércio local e descubra os melhores negócios da sua região",
+    heroTitle: "Seu guia de comércios e serviços em Águas Mornas",
+    heroSubtitle: "Tudo o que você precisa, perto de você.",
     heroImageUrl: "/banner.png",
     description:
       "Águas Mornas é um município acolhedor no Vale do Tijucas, conhecido por sua gastronomia colonial e hospitalidade.",
