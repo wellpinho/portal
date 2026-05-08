@@ -11,13 +11,6 @@ export const CategorySegments: Record<ProfileCategory, string[]> = {
     "Pizzaria",
     "Padaria",
   ],
-  [ProfileCategory.SERVICOS_AUTOMOTIVOS]: [
-    "Oficina Mecanica",
-    "Autoeletrica",
-    "Lava-jato",
-    "Borracharia",
-    "Pecas",
-  ],
   [ProfileCategory.CASA_CONSTRUCAO]: [
     "Material de Construcao",
     "Marcenaria",
@@ -74,6 +67,12 @@ export const CategorySegments: Record<ProfileCategory, string[]> = {
     // Outros
     "Costura e Reformas",
     "Aulas Particulares / Reforço",
+
+    "Oficina Mecanica",
+    "Autoeletrica",
+    "Lava-jato",
+    "Borracharia",
+    "Pecas",
   ],
   [ProfileCategory.TURISMO_LAZER]: [
     "Pousada",

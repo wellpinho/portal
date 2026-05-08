@@ -4,10 +4,11 @@ import {
   ShoppingBag,
   Home,
   Heart,
-  BookOpen,
-  Dumbbell,
   Camera,
+  Leaf,
+  Hammer,
 } from "lucide-react";
+import { ProfileCategory } from "@/lib/profile-category.lib";
 
 export type CategoryIcon = typeof UtensilsCrossed;
 
@@ -16,6 +17,7 @@ export interface FeaturedCategory {
   name: string;
   icon: CategoryIcon;
   slug: string;
+  category: ProfileCategory;
 }
 
 export interface CityConfig {
@@ -34,55 +36,93 @@ export interface CityConfig {
   founded?: number;
 }
 
-export const FEATURED_CATEGORIES: Record<string, FeaturedCategory> = {
-  gastronomy: {
-    id: "gastronomy",
+/**
+ * Mapeamento de ProfileCategory para FeaturedCategory
+ * Define ícones, nomes e slugs para cada categoria de perfil
+ */
+export const CATEGORY_MAPPING: Record<
+  ProfileCategory,
+  Omit<FeaturedCategory, "id" | "category">
+> = {
+  [ProfileCategory.GASTRONOMIA]: {
     name: "Gastronomia",
     icon: UtensilsCrossed,
     slug: "gastronomia",
   },
-  services: {
-    id: "services",
-    name: "Serviços",
+  [ProfileCategory.SERVICOS_PROFISSIONAIS]: {
+    name: "Serviços Profissionais",
     icon: Wrench,
-    slug: "servicos",
+    slug: "servicos-profissionais",
   },
-  retail: {
-    id: "retail",
-    name: "Varejo",
-    icon: ShoppingBag,
-    slug: "varejo",
+  [ProfileCategory.AGRO_COLONIAIS]: {
+    name: "Agro & Coloniais",
+    icon: Leaf,
+    slug: "agro-coloniais",
   },
-  accommodation: {
-    id: "accommodation",
-    name: "Hospedagem",
-    icon: Home,
-    slug: "hospedagem",
-  },
-  wellness: {
-    id: "wellness",
-    name: "Bem-estar",
+  [ProfileCategory.SAUDE_BELEZA]: {
+    name: "Saúde & Beleza",
     icon: Heart,
-    slug: "bem-estar",
+    slug: "saude-beleza",
   },
-  education: {
-    id: "education",
-    name: "Educação",
-    icon: BookOpen,
-    slug: "educacao",
+  [ProfileCategory.COMERCIO_VAREJO]: {
+    name: "Comércio & Varejo",
+    icon: ShoppingBag,
+    slug: "comercio-varejo",
   },
-  fitness: {
-    id: "fitness",
-    name: "Fitness",
-    icon: Dumbbell,
-    slug: "fitness",
-  },
-  photography: {
-    id: "photography",
-    name: "Fotografia",
+  [ProfileCategory.TURISMO_LAZER]: {
+    name: "Turismo & Lazer",
     icon: Camera,
-    slug: "fotografia",
+    slug: "turismo-lazer",
   },
+  [ProfileCategory.IMOBILIARIA_LAR]: {
+    name: "Imobiliária & Lar",
+    icon: Home,
+    slug: "imobiliaria-lar",
+  },
+  [ProfileCategory.CASA_CONSTRUCAO]: {
+    name: "Casa & Construção",
+    icon: Hammer,
+    slug: "casa-construcao",
+  },
+};
+
+/**
+ * Obter uma categoria formatada a partir do enum
+ */
+export function getCategoryFromEnum(
+  category: ProfileCategory,
+): FeaturedCategory {
+  const mapping = CATEGORY_MAPPING[category];
+  return {
+    id: category,
+    name: mapping.name,
+    icon: mapping.icon,
+    slug: mapping.slug,
+    category,
+  };
+}
+
+/**
+ * Retorna todas as categorias do enum como FeaturedCategory
+ */
+export function getAllCategories(): FeaturedCategory[] {
+  return Object.values(ProfileCategory).map((category) =>
+    getCategoryFromEnum(category),
+  );
+}
+
+/**
+ * Categorias destacadas para cada cidade (mapeadas do enum)
+ */
+export const FEATURED_CATEGORIES: Record<string, FeaturedCategory> = {
+  gastronomy: getCategoryFromEnum(ProfileCategory.GASTRONOMIA),
+  services: getCategoryFromEnum(ProfileCategory.SERVICOS_PROFISSIONAIS),
+  retail: getCategoryFromEnum(ProfileCategory.COMERCIO_VAREJO),
+  tourism: getCategoryFromEnum(ProfileCategory.TURISMO_LAZER),
+  imobiliaria_lar: getCategoryFromEnum(ProfileCategory.IMOBILIARIA_LAR),
+  casa_construcao: getCategoryFromEnum(ProfileCategory.CASA_CONSTRUCAO),
+  saude_beleza: getCategoryFromEnum(ProfileCategory.SAUDE_BELEZA),
+  agro_coloniais: getCategoryFromEnum(ProfileCategory.AGRO_COLONIAIS),
 };
 
 /**
@@ -107,7 +147,11 @@ export const CITY_CONFIGS: CityConfig[] = [
       FEATURED_CATEGORIES.gastronomy,
       FEATURED_CATEGORIES.services,
       FEATURED_CATEGORIES.retail,
-      FEATURED_CATEGORIES.accommodation,
+      FEATURED_CATEGORIES.tourism,
+      FEATURED_CATEGORIES.imobiliaria_lar,
+      FEATURED_CATEGORIES.casa_construcao,
+      FEATURED_CATEGORIES.saude_beleza,
+      FEATURED_CATEGORIES.agro_coloniais,
     ],
     population: 8500,
     founded: 1852,
@@ -128,9 +172,9 @@ export const CITY_CONFIGS: CityConfig[] = [
       "https://images.unsplash.com/photo-1494783367193-149034c05e41?w=500&h=300&fit=crop",
     featuredCategories: [
       FEATURED_CATEGORIES.gastronomy,
-      FEATURED_CATEGORIES.wellness,
       FEATURED_CATEGORIES.services,
-      FEATURED_CATEGORIES.education,
+      FEATURED_CATEGORIES.retail,
+      FEATURED_CATEGORIES.tourism,
     ],
     population: 5200,
     founded: 1900,
@@ -151,10 +195,15 @@ export const CITY_CONFIGS: CityConfig[] = [
     imageUrl:
       "https://images.unsplash.com/photo-1511306514869-a1f4dd70d1a5?w=500&h=300&fit=crop",
     featuredCategories: [
-      FEATURED_CATEGORIES.retail,
       FEATURED_CATEGORIES.gastronomy,
       FEATURED_CATEGORIES.services,
-      FEATURED_CATEGORIES.fitness,
+      FEATURED_CATEGORIES.retail,
+      FEATURED_CATEGORIES.tourism,
+      FEATURED_CATEGORIES.imobiliaria_lar,
+      FEATURED_CATEGORIES.casa_construcao,
+      FEATURED_CATEGORIES.saude_beleza,
+      FEATURED_CATEGORIES.servicos_profissionais,
+      FEATURED_CATEGORIES.agro_coloniais,
     ],
     population: 126000,
     founded: 1860,
@@ -176,9 +225,9 @@ export const CITY_CONFIGS: CityConfig[] = [
       "https://images.unsplash.com/photo-1520701494073-0ff1b66b6883?w=500&h=300&fit=crop",
     featuredCategories: [
       FEATURED_CATEGORIES.gastronomy,
-      FEATURED_CATEGORIES.photography,
-      FEATURED_CATEGORIES.accommodation,
       FEATURED_CATEGORIES.services,
+      FEATURED_CATEGORIES.retail,
+      FEATURED_CATEGORIES.tourism,
     ],
     population: 320000,
     founded: 1850,
