@@ -14,19 +14,23 @@ export type Category =
   | "Comércio"
   | "Utilidade";
 
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+}
+
 export interface Business {
   id: string;
   slug: string;
-  name: string;
+  businessName: string;
   category: Exclude<Category, "Todos">;
   segment?: string;
-  location: string;
   neighborhood?: string;
-  address: string;
-  /** E.164-like number for wa.me (country + area + number, digits only) */
-  phone: string;
+  address: Address;
+  businessWhatsapp: string;
   mapUrl: string;
-  imageUrl: string;
+  avatar: string;
   bannerUrl: string;
   logoUrl: string;
   galleryImages: [string, string, string, string];

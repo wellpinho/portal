@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sliders } from "lucide-react";
 import FilterSidebar from "@/components/filters/FilterSidebar";
 import FilterModal from "@/components/filters/FilterModal";
@@ -8,33 +8,90 @@ import BusinessCard from "@/components/BusinessCard";
 import { Business } from "@/lib/types";
 
 interface CategoryContentProps {
-  businesses: Business[];
+  initialBusinesses: Business[];
   segments: string[];
   selectedSegment?: string;
-  neighborhoods: string[];
   selectedNeighborhood?: string;
   state: string;
   city: string;
   category: string;
+  slug: string;
+  categoryName: string;
 }
 
 export default function CategoryContent({
-  businesses,
+  initialBusinesses,
   segments,
   selectedSegment,
-  neighborhoods,
   selectedNeighborhood,
   state,
   city,
   category,
+  slug,
+  categoryName,
 }: CategoryContentProps) {
+  const [businesses, setBusinesses] = useState<Business[]>(initialBusinesses);
+  const [neighborhoods, setNeighborhoods] = useState<string[]>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch businesses from API route on component mount
+  useEffect(() => {
+    const fetchBusinesses = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const params = new URLSearchParams({
+          page: "1",
+          limit: "10",
+          slug,
+          category: categoryName,
+        });
+
+        const response = await fetch(`/api/profile/list?${params.toString()}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const fetchedBusinesses = Array.isArray(data?.data) ? data.data : [];
+        setBusinesses(fetchedBusinesses);
+
+        // Extract unique neighborhoods from businesses
+        const uniqueNeighborhoods = Array.from(
+          new Set(
+            fetchedBusinesses
+              .map((b: Business) => b.neighborhood || b.address)
+              .filter(Boolean),
+          ),
+        ).sort() as string[];
+        setNeighborhoods(uniqueNeighborhoods);
+      } catch (err) {
+        console.error("Erro ao buscar negócios:", err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Erro desconhecido ao buscar dados",
+        );
+        setNeighborhoods([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBusinesses();
+  }, [slug, categoryName]);
 
   const filteredBusinesses = businesses.filter((business) => {
     if (selectedSegment && business.segment !== selectedSegment) return false;
     if (
       selectedNeighborhood &&
-      (business.neighborhood || business.location) !== selectedNeighborhood
+      (business.neighborhood || business.address) !== selectedNeighborhood
     )
       return false;
     return true;
@@ -71,7 +128,19 @@ export default function CategoryContent({
           {/* Content Section */}
           <section className="py-12 sm:py-16 bg-stone-50">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-              {filteredBusinesses.length > 0 ? (
+              {isLoading ? (
+                <div className="text-center py-16">
+                  <p className="text-lg text-stone-600">
+                    Carregando comércios...
+                  </p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-16">
+                  <p className="text-lg text-red-600 mb-6">
+                    Erro ao carregar comércios: {error}
+                  </p>
+                </div>
+              ) : filteredBusinesses.length > 0 ? (
                 <>
                   {/* Results Header */}
                   <div className="mb-8">
@@ -91,7 +160,7 @@ export default function CategoryContent({
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredBusinesses.map((business, index) => (
                       <BusinessCard
-                        key={business.slug}
+                        key={business.id}
                         business={business}
                         priority={index < 3}
                       />

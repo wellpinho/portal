@@ -9,7 +9,6 @@ import {
   getCategoryBySlug,
   getAllCitySlugs,
 } from "@/lib/data/cities";
-import { getBusinessesByLocation } from "@/lib/business-service";
 import { ProfileCategory } from "@/lib/profile-category.lib";
 import { CategorySegments } from "@/lib/category-segments.lib";
 
@@ -141,24 +140,8 @@ export default async function CategoryPage({
     );
   }
 
-  // Fetch businesses by category (mock - in production, filter by category ID)
-  const allBusinesses = await getBusinessesByLocation(
-    state.toUpperCase(),
-    city,
-  );
-
-  // In production, you would filter by category ID from the database
-  // For now, we filter by segment/category name (simple mock)
-  const businesses = allBusinesses.filter((b) =>
-    b.category?.toLowerCase().includes(categoryConfig.name.toLowerCase()),
-  );
-
-  // Extract unique neighborhoods from businesses
-  const neighborhoods = Array.from(
-    new Set(
-      businesses.map((b) => b.neighborhood || b.location).filter(Boolean),
-    ),
-  ).sort();
+  // Build slug: city-state (example: aguas-mornas-sc)
+  const slug = `${city}-${state.toLowerCase()}`;
 
   // Breadcrumb items
   const breadcrumbItems: BreadcrumbItem[] = [
@@ -203,10 +186,8 @@ export default async function CategoryPage({
                   {categoryConfig.name}
                 </h1>
                 <p className="text-stone-600 mt-1">
-                  {businesses.length}{" "}
-                  {businesses.length === 1 ? "comércio" : "comércios"}{" "}
-                  encontrado
-                  {businesses.length !== 1 ? "s" : ""} em {cityConfig.name}
+                  Explore os melhores {categoryConfig.name.toLowerCase()} em{" "}
+                  {cityConfig.name}
                 </p>
               </div>
             </div>
@@ -215,14 +196,15 @@ export default async function CategoryPage({
 
         {/* Category Content with Filters */}
         <CategoryContent
-          businesses={businesses}
+          initialBusinesses={[]}
           segments={segments}
           selectedSegment={segmento}
-          neighborhoods={neighborhoods}
           selectedNeighborhood={bairro}
           state={state.toLowerCase()}
           city={city}
           category={category}
+          slug={slug}
+          categoryName={categoryConfig.name}
         />
       </main>
 
