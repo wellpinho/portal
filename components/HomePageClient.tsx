@@ -93,9 +93,7 @@ function toBusinessList(data: unknown): Business[] {
   return items.map((item, index) => {
     const name = item.businessName?.trim() || `Comércio ${index + 1}`;
     const city = item.address?.city?.trim() || "Águas Mornas";
-    const state = item.address?.state?.trim() || "SC";
     const neighborhood = item.address?.neighborhood?.trim() || city;
-    const street = item.address?.street?.trim() || "Endereço não informado";
     const ratingRaw = Array.isArray(item.reviews)
       ? item.reviews.map((review) => Number(review.score || 0))
       : [];
@@ -112,13 +110,19 @@ function toBusinessList(data: unknown): Business[] {
       id: String(item.id ?? `${index + 1}`),
       slug: item.slug?.trim() || toSlug(name),
       name,
+      businessName: item.businessName?.trim() || name,
+      businessWhatsapp: item.businessWhatsapp?.trim() || "",
       category: mapCategory(item.category),
       segment: item.segment?.trim() || undefined,
       location: `${neighborhood}, ${city}`,
-      address: `${street}, ${city} - ${state}`,
-      phone: toDigits(item.businessWhatsapp) || "5548999999999",
       mapUrl: "https://maps.google.com",
+      address: {
+        street: item.address?.street?.trim() || "Endereço não informado",
+        city,
+        state: item.address?.state?.trim() || "SC",
+      },
       imageUrl,
+      avatar: imageUrl,
       bannerUrl: imageUrl,
       logoUrl: imageUrl,
       galleryImages: [imageUrl, imageUrl, imageUrl, imageUrl],
@@ -216,7 +220,7 @@ export default function HomePageClient({
       const matchesCategory =
         selectedCategory === "Todos" || b.category === selectedCategory;
 
-      const businessNeighborhood = b.location.split(",")[0]?.trim() ?? "";
+      const businessNeighborhood = b.address.street.split(",")[0]?.trim() ?? "";
       const matchesNeighborhood =
         selectedNeighborhood === "Todos os bairros" ||
         businessNeighborhood === selectedNeighborhood;

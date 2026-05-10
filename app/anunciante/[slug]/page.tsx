@@ -31,10 +31,10 @@ export async function generateMetadata({
   }
 
   return {
-    title: business.name,
+    title: business.businessName,
     description: business.description,
     openGraph: {
-      title: business.name,
+      title: business.businessName,
       description: business.description,
       images: [business.bannerUrl],
     },
@@ -83,16 +83,16 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
 
         <section className="mt-3">
           <BusinessGallery
-            businessName={business.name}
+            businessName={business.businessName}
             coverImage={business.bannerUrl}
-            coverAlt={`Banner de ${business.name}`}
+            coverAlt={`Banner de ${business.businessName}`}
             images={business.galleryImages}
           >
             <div className="px-4 -mt-10 relative z-10">
               <div className="w-20 h-20 rounded-2xl bg-white border border-stone-200 shadow-sm overflow-hidden">
                 <Image
                   src={business.logoUrl}
-                  alt={`Logo de ${business.name}`}
+                  alt={`Logo de ${business.businessName}`}
                   width={80}
                   height={80}
                   className="w-full h-full object-cover"
@@ -101,9 +101,12 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
               </div>
 
               <h1 className="text-xl font-extrabold mt-3 tracking-tight">
-                {business.name}
+                {business.businessName}
               </h1>
-              <p className="text-sm text-stone-600 mt-1">{business.location}</p>
+              <p className="text-sm text-stone-600 mt-1">
+                {business.address.street}, {business.address.city} -{" "}
+                {business.address.state}
+              </p>
             </div>
           </BusinessGallery>
         </section>
@@ -128,7 +131,7 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
             Como chegar
           </a>
           <a
-            href={`https://wa.me/${business.phone}`}
+            href={`https://wa.me/${business.businessWhatsapp}?text=Ola! Encontrei ${business.businessName} no Comercios Locais e gostaria de mais informacoes.`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-3 px-4 touch-manipulation"

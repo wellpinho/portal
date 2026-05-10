@@ -28,6 +28,7 @@ export interface Business {
   segment?: string;
   neighborhood?: string;
   address: Address;
+  location: string;
   businessWhatsapp: string;
   mapUrl: string;
   avatar: string;

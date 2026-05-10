@@ -33,14 +33,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "1",
     slug: "venda-de-ovos-dona-maria",
-    name: "Venda de Ovos da Dona Maria",
+    businessName: "Venda de Ovos da Dona Maria",
     category: "Produtos Coloniais",
     location: "Bairro Alto, Águas Mornas",
-    address: "Estrada Geral do Bairro Alto, 145, Águas Mornas - SC",
-    phone: "5548999990001",
+    address: {
+      street: "Estrada Geral do Bairro Alto, 145, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990001",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Estrada+Geral+do+Bairro+Alto+145+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/ovos-coloniais/400/300",
+    avatar: "https://picsum.photos/seed/ovos-coloniais/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-ovos-dona-maria/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-ovos-dona-maria/200/200",
     galleryImages: [
@@ -66,14 +70,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "2",
     slug: "eletricista-seu-joao",
-    name: "Eletricista do Seu João",
+    businessName: "Eletricista do Seu João",
     category: "Serviços",
     location: "Centro, Águas Mornas",
-    address: "Rua das Araucárias, 82, Centro, Águas Mornas - SC",
-    phone: "5548999990002",
+    address: {
+      street: "Rua das Araucárias, 82, Centro, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990002",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Rua+das+Araucarias+82+Centro+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/eletricista-joao/400/300",
+    avatar: "https://picsum.photos/seed/eletricista-joao/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-eletricista-joao/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-eletricista-joao/200/200",
     galleryImages: [
@@ -99,14 +107,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "3",
     slug: "padaria-central",
-    name: "Padaria Central",
+    businessName: "Padaria Central",
     category: "Gastronomia",
     location: "Centro, Águas Mornas",
-    address: "Avenida Principal, 201, Centro, Águas Mornas - SC",
-    phone: "5548999990003",
+    address: {
+      street: "Avenida Principal, 201, Centro, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990003",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Avenida+Principal+201+Centro+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/padaria-central/400/300",
+    avatar: "https://picsum.photos/seed/padaria-central/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-padaria-central/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-padaria-central/200/200",
     galleryImages: [
@@ -133,14 +145,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "4",
     slug: "farmacia-sao-jose",
-    name: "Farmácia São José",
+    businessName: "Farmácia São José",
     category: "Saúde",
     location: "Centro, Águas Mornas",
-    address: "Rua da Igreja, 50, Centro, Águas Mornas - SC",
-    phone: "5548999990004",
+    address: {
+      street: "Rua da Igreja, 50, Centro, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990004",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Rua+da+Igreja+50+Centro+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/farmacia-sao-jose/400/300",
+    avatar: "https://picsum.photos/seed/farmacia-sao-jose/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-farmacia-sao-jose/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-farmacia-sao-jose/200/200",
     galleryImages: [
@@ -171,14 +187,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "5",
     slug: "mercearia-do-ze",
-    name: "Mercearia do Zé",
+    businessName: "Mercearia do Zé",
     category: "Comércio",
     location: "Vila Nova, Águas Mornas",
-    address: "Rua da Ponte, 312, Vila Nova, Águas Mornas - SC",
-    phone: "5548999990005",
+    address: {
+      street: "Rua da Ponte, 312, Vila Nova, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990005",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Rua+da+Ponte+312+Vila+Nova+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/mercearia-ze/400/300",
+    avatar: "https://picsum.photos/seed/mercearia-ze/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-mercearia-ze/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-mercearia-ze/200/200",
     galleryImages: [
@@ -204,14 +224,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "6",
     slug: "salao-da-margareth",
-    name: "Salão da Margareth",
+    businessName: "Salão da Margareth",
     category: "Serviços",
     location: "Bairro Novo, Águas Mornas",
-    address: "Rua das Flores, 97, Bairro Novo, Águas Mornas - SC",
-    phone: "5548999990006",
+    address: {
+      street: "Rua das Flores, 97, Bairro Novo, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990006",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Rua+das+Flores+97+Bairro+Novo+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/salao-margareth/400/300",
+    avatar: "https://picsum.photos/seed/salao-margareth/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-salao-margareth/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-salao-margareth/200/200",
     galleryImages: [
@@ -242,14 +266,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "7",
     slug: "restaurante-vo-lurdes",
-    name: "Restaurante da Vó Lurdes",
+    businessName: "Restaurante da Vó Lurdes",
     category: "Gastronomia",
     location: "Estrada do Campo, Águas Mornas",
-    address: "Estrada do Campo, km 3, Águas Mornas - SC",
-    phone: "5548999990007",
+    address: {
+      street: "Estrada do Campo, km 3, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990007",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Estrada+do+Campo+km+3+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/restaurante-lurdes/400/300",
+    avatar: "https://picsum.photos/seed/restaurante-lurdes/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-restaurante-lurdes/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-restaurante-lurdes/200/200",
     galleryImages: [
@@ -271,14 +299,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "8",
     slug: "pousada-vale-verde",
-    name: "Pousada Vale Verde",
+    businessName: "Pousada Vale Verde",
     category: "Utilidade",
     location: "Linha São Luís, Águas Mornas",
-    address: "Linha São Luís, 450, Águas Mornas - SC",
-    phone: "5548999990008",
+    address: {
+      street: "Linha São Luís, 450, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990008",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Linha+Sao+Luis+450+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/pousada-vale/400/300",
+    avatar: "https://picsum.photos/seed/pousada-vale/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-pousada-vale/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-pousada-vale/200/200",
     galleryImages: [
@@ -300,14 +332,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "9",
     slug: "borracharia-pneus-mario",
-    name: "Borracharia e Pneus do Mário",
+    businessName: "Borracharia e Pneus do Mário",
     category: "Serviços",
     location: "Entrada da Cidade, Águas Mornas",
-    address: "SC-435, 20, Entrada da Cidade, Águas Mornas - SC",
-    phone: "5548999990009",
+    address: {
+      street: "SC-435, 20, Entrada da Cidade, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990009",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=SC-435+20+Entrada+da+Cidade+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/borracharia-mario/400/300",
+    avatar: "https://picsum.photos/seed/borracharia-mario/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-borracharia-mario/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-borracharia-mario/200/200",
     galleryImages: [
@@ -333,14 +369,18 @@ export const MOCK_BUSINESSES: Business[] = [
   {
     id: "10",
     slug: "feira-organica-sabado",
-    name: "Feira Orgânica do Sábado",
+    businessName: "Feira Orgânica do Sábado",
     category: "Produtos Coloniais",
     location: "Praça Central, Águas Mornas",
-    address: "Praça Central, Centro, Águas Mornas - SC",
-    phone: "5548999990010",
+    address: {
+      street: "Praça Central, Centro, Águas Mornas - SC",
+      city: "Águas Mornas",
+      state: "SC",
+    },
+    businessWhatsapp: "5548999990010",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Praca+Central+Centro+Aguas+Mornas+SC",
-    imageUrl: "https://picsum.photos/seed/feira-organica/400/300",
+    avatar: "https://picsum.photos/seed/feira-organica/400/300",
     bannerUrl: "https://picsum.photos/seed/banner-feira-organica/1200/500",
     logoUrl: "https://picsum.photos/seed/logo-feira-organica/200/200",
     galleryImages: [

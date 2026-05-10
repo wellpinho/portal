@@ -41,8 +41,6 @@ export default function BusinessCard({
   const { street, city, state } = address;
   const googleMapsUrl = generateMapsLink(businessName, street, city, state);
 
-  console.log("BusinessCard render:", business);
-
   return (
     <article
       className={[
