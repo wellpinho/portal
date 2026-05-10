@@ -441,7 +441,7 @@ export default function Header({
 
       <Link
         href="/anunciante/onboarding"
-        className="fixed right-0 top-1/2 z-60 -translate-y-1/2 rounded-l-xl bg-emerald-600 px-2 py-3 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-emerald-900/25 transition-all hover:bg-emerald-500 active:translate-x-0 sm:hidden [writing-mode:vertical-rl]"
+        className="fixed right-0 top-[32%] z-60 -translate-y-1/2 rounded-l-xl bg-emerald-600 px-2 py-3 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-emerald-900/25 transition-all hover:bg-emerald-500 active:translate-x-0 sm:hidden [writing-mode:vertical-rl]"
         aria-label="Anuncie sua marca"
       >
         Anuncie sua marca

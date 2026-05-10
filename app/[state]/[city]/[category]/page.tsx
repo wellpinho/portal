@@ -3,16 +3,22 @@ import Header from "@/components/Header";
 import Breadcrumb, { BreadcrumbItem } from "@/components/common/Breadcrumb";
 import CityNotFound from "@/components/home/CityNotFound";
 import { FooterComponent } from "@/components/Footer";
-import BusinessCard from "@/components/BusinessCard";
+import CategoryContent from "@/components/CategoryContent";
 import {
   findCityConfig,
   getCategoryBySlug,
   getAllCitySlugs,
 } from "@/lib/data/cities";
 import { getBusinessesByLocation } from "@/lib/business-service";
+import { ProfileCategory } from "@/lib/profile-category.lib";
+import { CategorySegments } from "@/lib/category-segments.lib";
 
 type CategoryPageProps = {
   params: Promise<{ state: string; city: string; category: string }>;
+  searchParams: Promise<{
+    segmento?: string;
+    bairro?: string;
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -39,7 +45,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
-  const { state, city, category } = await params;
+  const { city, category } = await params;
   const cityConfig = findCityConfig(city);
   const categoryConfig = getCategoryBySlug(category);
 
@@ -61,10 +67,31 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: CategoryPageProps) {
   const { state, city, category } = await params;
+  const { segmento, bairro } = await searchParams;
   const cityConfig = findCityConfig(city);
   const categoryConfig = getCategoryBySlug(category);
+
+  // Map category slug to ProfileCategory enum
+  const profileCategoryMap: Record<string, ProfileCategory> = {
+    gastronomia: ProfileCategory.GASTRONOMIA,
+    "servicos-profissionais": ProfileCategory.SERVICOS_PROFISSIONAIS,
+    "agro-coloniais": ProfileCategory.AGRO_COLONIAIS,
+    "saude-beleza": ProfileCategory.SAUDE_BELEZA,
+    "comercio-varejo": ProfileCategory.COMERCIO_VAREJO,
+    "turismo-lazer": ProfileCategory.TURISMO_LAZER,
+    "imobiliaria-lar": ProfileCategory.IMOBILIARIA_LAR,
+    "casa-construcao": ProfileCategory.CASA_CONSTRUCAO,
+  };
+
+  const profileCategory = profileCategoryMap[category];
+
+  // Get segments from CategorySegments based on profile category
+  const segments = profileCategory ? CategorySegments[profileCategory] : [];
 
   // 404: City not found
   if (!cityConfig) {
@@ -126,6 +153,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     b.category?.toLowerCase().includes(categoryConfig.name.toLowerCase()),
   );
 
+  // Extract unique neighborhoods from businesses
+  const neighborhoods = Array.from(
+    new Set(
+      businesses.map((b) => b.neighborhood || b.location).filter(Boolean),
+    ),
+  ).sort();
+
   // Breadcrumb items
   const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -142,7 +176,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     <div className="flex min-h-screen flex-col">
       <Header currentCity={cityRoute} />
 
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col">
         {/* Breadcrumb */}
         <section className="py-4 sm:py-6 bg-stone-50 border-b border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -179,34 +213,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         </section>
 
-        {/* Business Grid */}
-        <section className="py-12 sm:py-16 bg-stone-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {businesses.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {businesses.map((business, index) => (
-                  <BusinessCard
-                    key={business.slug}
-                    business={business}
-                    priority={index < 2}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <p className="text-lg text-stone-600 mb-6">
-                  Nenhum comércio encontrado nesta categoria.
-                </p>
-                <a
-                  href={`/${state.toLowerCase()}/${city}`}
-                  className="inline-block px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
-                >
-                  Explorar outras categorias
-                </a>
-              </div>
-            )}
-          </div>
-        </section>
+        {/* Category Content with Filters */}
+        <CategoryContent
+          businesses={businesses}
+          segments={segments}
+          selectedSegment={segmento}
+          neighborhoods={neighborhoods}
+          selectedNeighborhood={bairro}
+          state={state.toLowerCase()}
+          city={city}
+          category={category}
+        />
       </main>
 
       <FooterComponent />

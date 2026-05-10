@@ -21,6 +21,7 @@ export interface Business {
   category: Exclude<Category, "Todos">;
   segment?: string;
   location: string;
+  neighborhood?: string;
   address: string;
   /** E.164-like number for wa.me (country + area + number, digits only) */
   phone: string;
