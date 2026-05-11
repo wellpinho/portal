@@ -7,6 +7,16 @@ import FilterModal from "@/components/filters/FilterModal";
 import BusinessCard from "@/components/BusinessCard";
 import { Business } from "@/lib/types";
 
+// Função para sanitizar texto: converter "Área Rural" em "area-rural"
+const sanitizeNeighborhood = (text: string): string => {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+    .replace(/\s+/g, "-") // Espaços em hífen
+    .replace(/[^\w-]/g, ""); // Remove caracteres especiais
+};
+
 interface CategoryContentProps {
   initialBusinesses: Business[];
   segments: string[];
@@ -62,15 +72,8 @@ export default function CategoryContent({
         const fetchedBusinesses = Array.isArray(data?.data) ? data.data : [];
         setBusinesses(fetchedBusinesses);
 
-        // Extract unique neighborhoods from businesses
-        const uniqueNeighborhoods = Array.from(
-          new Set(
-            fetchedBusinesses
-              .map((b: Business) => b.neighborhood || b.address)
-              .filter(Boolean),
-          ),
-        ).sort() as string[];
-        setNeighborhoods(uniqueNeighborhoods);
+        console.log(data?.neighborhoods, "uniqueNeighborhoods");
+        setNeighborhoods(data?.neighborhoods || []);
       } catch (err) {
         console.error("Erro ao buscar negócios:", err);
         setError(
@@ -89,11 +92,15 @@ export default function CategoryContent({
 
   const filteredBusinesses = businesses.filter((business) => {
     if (selectedSegment && business.segment !== selectedSegment) return false;
-    if (
-      selectedNeighborhood &&
-      (business.neighborhood || business.address) !== selectedNeighborhood
-    )
-      return false;
+    if (selectedNeighborhood) {
+      const businessNeighborhood =
+        business.neighborhood || business.address?.street;
+      const sanitizedSelected = sanitizeNeighborhood(selectedNeighborhood);
+      const sanitizedBusiness = sanitizeNeighborhood(
+        businessNeighborhood || "",
+      );
+      if (sanitizedBusiness !== sanitizedSelected) return false;
+    }
     return true;
   });
 

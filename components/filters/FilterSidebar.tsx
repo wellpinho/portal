@@ -163,20 +163,24 @@ export default function FilterSidebar({
                     />
                     <span className="text-sm text-stone-700">Todos</span>
                   </label>
-                  {neighborhoods.map((neighborhood) => (
+                  {neighborhoods.map((neighborhood, index) => (
                     <label
-                      key={neighborhood}
+                      key={index}
                       className="flex items-center gap-3 cursor-pointer"
                     >
                       <input
                         type="checkbox"
                         checked={selectedNeighborhood === neighborhood}
                         onChange={(e) =>
-                          handleNeighborhoodChange(e.target.checked ? neighborhood : null)
+                          handleNeighborhoodChange(
+                            e.target.checked ? neighborhood : null,
+                          )
                         }
                         className="w-4 h-4 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500"
                       />
-                      <span className="text-sm text-stone-700">{neighborhood}</span>
+                      <span className="text-sm text-stone-700">
+                        {neighborhood}
+                      </span>
                     </label>
                   ))}
                 </div>
