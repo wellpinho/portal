@@ -827,7 +827,7 @@ export default function OnboardingMultiStepForm() {
                     ) : null}
                   </div>
 
-                  <label className="grid gap-1.5 text-sm text-stone-700">
+                  <label className="grid gap-1.5 text-sm text-stone-700 lg:max-h-10">
                     Categoria
                     <select
                       value={formData.category}
@@ -842,7 +842,7 @@ export default function OnboardingMultiStepForm() {
                       onInvalid={onFieldInvalid}
                       data-required-message="Escolha uma categoria para seu comercio aparecer nas buscas certas."
                       required
-                      className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                      className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5  outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
                     >
                       <option value="">Selecione</option>
                       {(
@@ -1151,6 +1151,7 @@ export default function OnboardingMultiStepForm() {
 
             {step < TOTAL_STEPS ? (
               <button
+                key="next-step"
                 type="button"
                 onClick={nextStep}
                 className="rounded-xl bg-[#3D7A3A] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#3D7A3A]/30 transition hover:bg-[#2f622c]"
@@ -1159,6 +1160,7 @@ export default function OnboardingMultiStepForm() {
               </button>
             ) : (
               <button
+                key="submit-step"
                 type="submit"
                 className="rounded-xl bg-linear-to-r cursor-pointer from-[#3D7A3A] to-[#57a251] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(61,122,58,0.35)] transition hover:brightness-110"
               >
