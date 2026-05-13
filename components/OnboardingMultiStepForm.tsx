@@ -31,6 +31,7 @@ type Step = 1 | 2 | 3;
 type FormField = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 type FormData = {
+  accountType: "" | "EXISTING_ACCOUNT" | "FIRST_ACCESS";
   ownerName: string;
   businessName: string;
   ownerWhatsapp: string;
@@ -238,6 +239,7 @@ export default function OnboardingMultiStepForm() {
   const [samePhone, setSamePhone] = useState(false);
   const [lastZipLookup, setLastZipLookup] = useState("");
   const [formData, setFormData] = useState<FormData>({
+    accountType: "",
     ownerName: "",
     businessName: "",
     ownerWhatsapp: "",
@@ -264,6 +266,7 @@ export default function OnboardingMultiStepForm() {
     startTransition(() => {
       setFormData((prev) => ({
         ...prev,
+        accountType: draft.accountType ?? prev.accountType,
         ownerName: draft.ownerName ?? prev.ownerName,
         businessName: draft.businessName ?? prev.businessName,
         ownerWhatsapp: draft.ownerWhatsapp ?? prev.ownerWhatsapp,
@@ -629,7 +632,7 @@ export default function OnboardingMultiStepForm() {
         </div>
 
         <form ref={formRef} onSubmit={onSubmit} className="space-y-6">
-          <div className="relative overflow-hidden sm:min-h-105">
+          <div className="relative overflow-hidden">
             <div
               data-step="1"
               className={`w-full transition-all duration-300 ${
@@ -642,77 +645,132 @@ export default function OnboardingMultiStepForm() {
               <h2 className="mb-4 text-lg font-semibold text-[#224420]">
                 Cadastro Simples
               </h2>
-              <div className="grid gap-4">
-                <label className="grid gap-1.5 text-sm text-stone-700">
-                  Nome do Responsável
+
+              <div className="grid gap-2 rounded-xl border border-[#cde4cc] bg-[#f4faf4] px-3.5 py-3 mb-4">
+                <p className="text-sm font-semibold text-[#2f622c]">
+                  Como queres continuar?
+                </p>
+
+                <label className="flex items-center gap-2 text-sm text-stone-700 cursor-pointer">
                   <input
-                    value={formData.ownerName}
+                    type="radio"
+                    name="accountType"
+                    value="EXISTING_ACCOUNT"
+                    checked={formData.accountType === "EXISTING_ACCOUNT"}
                     onChange={(event) => {
-                      updateField("ownerName", event.target.value);
-                      clearFieldError(event.currentTarget);
+                      updateField(
+                        "accountType",
+                        event.target.value as FormData["accountType"],
+                      );
                     }}
-                    onInvalid={onFieldInvalid}
-                    data-required-message="Como devemos te chamar? Preencha o nome do responsável."
-                    placeholder="Ex: Ana Carolina"
-                    required
-                    className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                    className="h-4 w-4 border-2 border-[#9dcb9a] accent-[#2f622c]"
                   />
+                  Já sou parceiro (Entrar)
                 </label>
 
-                <label className="grid gap-1.5 text-sm text-stone-700">
-                  Seu email
+                <label className="flex items-center gap-2 text-sm text-stone-700 cursor-pointer">
                   <input
-                    value={formData.email}
+                    type="radio"
+                    name="accountType"
+                    value="FIRST_ACCESS"
+                    checked={formData.accountType === "FIRST_ACCESS"}
                     onChange={(event) => {
-                      updateField("email", event.target.value);
-                      clearFieldError(event.currentTarget);
+                      updateField(
+                        "accountType",
+                        event.target.value as FormData["accountType"],
+                      );
                     }}
-                    onInvalid={onFieldInvalid}
-                    data-required-message="Informe o seu email para contato."
-                    placeholder="Ex: ana@example.com"
-                    required
-                    className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                    className="h-4 w-4 border-2 border-[#9dcb9a] accent-[#2f622c]"
                   />
-                </label>
-
-                <label className="grid gap-1.5 text-sm text-stone-700">
-                  WhatsApp
-                  <input
-                    name="ownerWhatsapp"
-                    value={formData.ownerWhatsapp}
-                    onChange={(event) => {
-                      onWhatsappChange("ownerWhatsapp", event.target.value);
-                      clearFieldError(event.currentTarget);
-                    }}
-                    onInvalid={onFieldInvalid}
-                    data-required-message="Adicione um WhatsApp para receber contatos dos clientes."
-                    placeholder="(48) 99999-9999"
-                    inputMode="numeric"
-                    type="tel"
-                    required
-                    className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
-                  />
-                </label>
-
-                <label className="grid gap-1.5 text-sm text-stone-700">
-                  Senha
-                  <input
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(event) => {
-                      updateField("password", event.target.value);
-                      validatePasswordField(event.currentTarget);
-                    }}
-                    onInvalid={onFieldInvalid}
-                    data-required-message="Crie uma senha para acessar sua conta."
-                    placeholder="Minimo de 8 caracteres"
-                    minLength={8}
-                    required
-                    className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
-                  />
+                  É o meu primeiro anúncio
                 </label>
               </div>
+
+              {formData.accountType === "EXISTING_ACCOUNT" ? (
+                <div className="rounded-xl bg-[#3D7A3A] px-5 py-4 text-center">
+                  <p className="text-sm text-white mb-3">
+                    Acesse sua conta para anunciar novo comércio
+                  </p>
+                  <Link
+                    href="/login"
+                    className="inline-block w-full rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-[#3D7A3A] hover:bg-stone-100 transition"
+                  >
+                    Ir para Login
+                  </Link>
+                </div>
+              ) : formData.accountType === "FIRST_ACCESS" ? (
+                <div className="grid gap-4">
+                  <label className="grid gap-1.5 text-sm text-stone-700">
+                    Nome do Responsável
+                    <input
+                      value={formData.ownerName}
+                      onChange={(event) => {
+                        updateField("ownerName", event.target.value);
+                        clearFieldError(event.currentTarget);
+                      }}
+                      onInvalid={onFieldInvalid}
+                      data-required-message="Como devemos te chamar? Preencha o nome do responsável."
+                      placeholder="Ex: Ana Carolina"
+                      required
+                      className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                    />
+                  </label>
+
+                  <label className="grid gap-1.5 text-sm text-stone-700">
+                    Seu email
+                    <input
+                      value={formData.email}
+                      onChange={(event) => {
+                        updateField("email", event.target.value);
+                        clearFieldError(event.currentTarget);
+                      }}
+                      onInvalid={onFieldInvalid}
+                      data-required-message="Informe o seu email para contato."
+                      placeholder="Ex: ana@example.com"
+                      required
+                      className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                    />
+                  </label>
+
+                  <label className="grid gap-1.5 text-sm text-stone-700">
+                    WhatsApp
+                    <input
+                      name="ownerWhatsapp"
+                      value={formData.ownerWhatsapp}
+                      onChange={(event) => {
+                        onWhatsappChange("ownerWhatsapp", event.target.value);
+                        clearFieldError(event.currentTarget);
+                      }}
+                      onInvalid={onFieldInvalid}
+                      data-required-message="Adicione um WhatsApp para receber contatos dos clientes."
+                      placeholder="(48) 99999-9999"
+                      inputMode="numeric"
+                      type="tel"
+                      required
+                      className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                    />
+                  </label>
+
+                  <label className="grid gap-1.5 text-sm text-stone-700">
+                    Senha
+                    <input
+                      name="password"
+                      type="password"
+                      value={formData.password}
+                      onChange={(event) => {
+                        updateField("password", event.target.value);
+                        validatePasswordField(event.currentTarget);
+                      }}
+                      onInvalid={onFieldInvalid}
+                      data-required-message="Crie uma senha para acessar sua conta."
+                      placeholder="Minimo de 8 caracteres"
+                      minLength={8}
+                      required
+                      className="rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 outline-none transition focus:border-[#5f9f5a] focus:ring-4 focus:ring-[#9dcb9a]/30"
+                    />
+                  </label>
+                </div>
+              ) : null}
             </div>
 
             <div
@@ -1149,7 +1207,8 @@ export default function OnboardingMultiStepForm() {
               </button>
             )}
 
-            {step < TOTAL_STEPS ? (
+            {step < TOTAL_STEPS &&
+            (step !== 1 || formData.accountType === "FIRST_ACCESS") ? (
               <button
                 key="next-step"
                 type="button"
@@ -1158,7 +1217,7 @@ export default function OnboardingMultiStepForm() {
               >
                 Continuar
               </button>
-            ) : (
+            ) : step === TOTAL_STEPS ? (
               <button
                 key="submit-step"
                 type="submit"
@@ -1166,7 +1225,7 @@ export default function OnboardingMultiStepForm() {
               >
                 Publicar Comércio
               </button>
-            )}
+            ) : null}
           </div>
         </form>
       </div>
