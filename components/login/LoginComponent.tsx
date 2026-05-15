@@ -481,7 +481,7 @@ export const LoginComponent = () => {
                   Ainda não tem uma conta?{" "}
                 </p>
                 <Link
-                  href="/register"
+                  href="/anunciante/onboarding"
                   className="inline-block w-full lg:w-auto lg:inline font-semibold py-2 px-4 rounded-lg border-2 border-[#589442] text-[#589442] hover:bg-[#589442]/10 transition-colors"
                 >
                   Crie uma conta gratuita
