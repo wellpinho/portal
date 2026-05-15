@@ -207,7 +207,7 @@ export default function CategoryContent({
                             setCurrentPage((prev) => Math.max(prev - 1, 1))
                           }
                           disabled={currentPage === 1}
-                          className="inline-flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
+                          className="inline-flex items-center cursor-pointer gap-1 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
                         >
                           <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span className="hidden sm:inline">Anterior</span>
@@ -229,7 +229,7 @@ export default function CategoryContent({
                                 className={`w-7 h-7 sm:w-10 sm:h-10 text-xs sm:text-base rounded-lg font-semibold transition-colors flex-shrink-0 ${
                                   currentPage === page
                                     ? "bg-emerald-600 text-white"
-                                    : "border border-stone-200 text-stone-700 hover:bg-stone-50"
+                                    : "border border-stone-200 text-stone-700 hover:bg-stone-50 cursor-pointer"
                                 }`}
                               >
                                 {page}
@@ -245,7 +245,7 @@ export default function CategoryContent({
                             )
                           }
                           disabled={currentPage === totalPages}
-                          className="inline-flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
+                          className="inline-flex items-center cursor-pointer gap-1 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
                         >
                           <span className="hidden sm:inline">Próxima</span>
                           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
