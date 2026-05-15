@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState, useCallback, useEffect } from "react";
 import { Eye, EyeOff, Lock, User, CheckCircle, XCircle } from "lucide-react";
 
-// Validadores
 const validateEmailFn = (email: string) => {
   if (!email.trim()) {
     return { isValid: false, message: "Email é obrigatório" };
@@ -24,7 +23,6 @@ const validateEmailFn = (email: string) => {
   return { isValid: true, message: "" };
 };
 
-// Valores iniciais seguros para SSR e hidratação consistente
 const INITIAL_FORM_DATA = { email: "", password: "" };
 const INITIAL_REMEMBER_ME = false;
 const INITIAL_VALIDATION = {
@@ -42,7 +40,6 @@ export const LoginComponent = () => {
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Carregar localStorage após hidratação (apenas no cliente, evita mismatch)
   useEffect(() => {
     setIsHydrated(true);
     const savedRememberMe = localStorage.getItem("rememberMe") === "true";
@@ -137,14 +134,10 @@ export const LoginComponent = () => {
     }));
   }, []);
 
-  // Nota: localStorage é sincronizado apenas no inicial via getInitialFormData/getInitialRememberMe
-  // Para salvar mudanças, adicione um effect posterior se necessário
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#589442]/5 via-gray-50 to-[#FCB53B]/10 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-[#589442]/5 via-gray-50 to-[#FCB53B]/10 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header da marca */}
-        <div className="text-center mb-8">
+        <div className="hidden md:block text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <h1 className="text-2xl font-bold text-gray-800">
               Comércios Locais
@@ -155,7 +148,6 @@ export const LoginComponent = () => {
           </p>
         </div>
 
-        {/* Formulário */}
         <div
           className={`bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 ${
             localValidation.email.isValid && localValidation.password.isValid
@@ -163,8 +155,7 @@ export const LoginComponent = () => {
               : ""
           }`}
         >
-          {/* Header do formulário */}
-          <div className="bg-gradient-to-r from-[#589442] to-[#589442]/90 px-8 py-6">
+          <div className="bg-linear-to-r from-[#589442] to-[#589442]/90 px-8 py-6">
             <h2 className="text-2xl font-bold text-white text-center">
               Bem-vindo de volta!
             </h2>
@@ -173,7 +164,6 @@ export const LoginComponent = () => {
             </p>
           </div>
 
-          {/* Formulário */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -189,7 +179,6 @@ export const LoginComponent = () => {
             noValidate
             aria-label="Formulário de login"
           >
-            {/* Campo Email */}
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -225,7 +214,6 @@ export const LoginComponent = () => {
                     (touched.email && !localValidation.email.isValid)
                   }
                 />
-                {/* Ícone de validação */}
                 {touched.email && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     {localValidation.email.isValid ? (
@@ -236,7 +224,6 @@ export const LoginComponent = () => {
                   </div>
                 )}
               </div>
-              {/* Mensagens de erro - prioriza erro do servidor */}
               {state?.errors?.email ? (
                 <p
                   id="email-error"
@@ -261,7 +248,6 @@ export const LoginComponent = () => {
               ) : null}
             </div>
 
-            {/* Campo Senha */}
             <div className="space-y-2">
               <label
                 htmlFor="password"
@@ -297,9 +283,7 @@ export const LoginComponent = () => {
                     (touched.password && !localValidation.password.isValid)
                   }
                 />
-                {/* Ícones lado direito */}
                 <div className="absolute inset-y-0 right-0 flex items-center">
-                  {/* Ícone de validação */}
                   {touched.password && (
                     <div className="pr-1">
                       {localValidation.password.isValid ? (
@@ -309,7 +293,6 @@ export const LoginComponent = () => {
                       )}
                     </div>
                   )}
-                  {/* Botão mostrar/ocultar senha */}
                   <button
                     type="button"
                     onClick={togglePasswordVisibility}
@@ -323,7 +306,6 @@ export const LoginComponent = () => {
                   </button>
                 </div>
               </div>
-              {/* Mensagens de erro/sucesso - prioriza erro do servidor */}
               {state?.errors?.password ? (
                 <p
                   id="password-error"
@@ -348,7 +330,6 @@ export const LoginComponent = () => {
               ) : null}
             </div>
 
-            {/* Opções */}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -359,7 +340,6 @@ export const LoginComponent = () => {
                   onChange={(e) => {
                     const checked = e.target.checked;
                     setRememberMe(checked);
-                    // Persist to localStorage
                     localStorage.setItem("rememberMe", checked.toString());
                     if (checked && formData.email) {
                       localStorage.setItem("savedEmail", formData.email);
@@ -379,14 +359,10 @@ export const LoginComponent = () => {
               </div>
             </div>
 
-            {/* Mensagem de erro geral */}
             {state?.message && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
                 <div className="flex items-start gap-3">
-                  <XCircle
-                    size={20}
-                    className="text-red-500 mt-0.5 flex-shrink-0"
-                  />
+                  <XCircle size={20} className="text-red-500 mt-0.5 shrink-0" />
                   <div>
                     <h4 className="text-sm font-medium text-red-800">
                       Erro no login
@@ -397,7 +373,6 @@ export const LoginComponent = () => {
               </div>
             )}
 
-            {/* Botão de Login */}
             <button
               disabled={
                 isLoading ||
@@ -414,7 +389,7 @@ export const LoginComponent = () => {
                 localValidation.email.isValid &&
                 localValidation.password.isValid &&
                 !isLoading
-                  ? "bg-gradient-to-r from-[#589442] to-[#589442]/90 hover:from-[#589442]/90 hover:to-[#589442] text-white hover:shadow-xl hover:-translate-y-0.5"
+                  ? "bg-linear-to-r from-[#589442] to-[#589442]/90 hover:from-[#589442]/90 hover:to-[#589442] text-white hover:shadow-xl hover:-translate-y-0.5"
                   : "bg-gray-300 text-gray-500 opacity-75"
               }`}
               title={
@@ -453,7 +428,6 @@ export const LoginComponent = () => {
               )}
             </button>
 
-            {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
@@ -463,7 +437,6 @@ export const LoginComponent = () => {
               </div>
             </div>
 
-            {/* Link para registro */}
             <div className="text-center">
               <p className="text-sm text-gray-700">
                 Ainda não tem uma conta?{" "}
@@ -478,7 +451,6 @@ export const LoginComponent = () => {
           </form>
         </div>
 
-        {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-xs text-gray-500">
             Ao fazer login, você concorda com nossos{" "}
@@ -499,7 +471,6 @@ export const LoginComponent = () => {
         </div>
       </div>
 
-      {/* Styles para animações */}
       <style jsx>{`
         @keyframes fade-in {
           from {
