@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Comércios Locais – Águas Mornas, SC",
+    default: "Comércios Locais",
     template: "%s | Comércios Locais",
   },
   description:
@@ -30,9 +30,14 @@ export const metadata: Metadata = {
     "serviços",
     "gastronomia",
     "marketplace",
+    "produtos coloniais",
+    "gastronomia",
   ],
   authors: [{ name: "Comércios Locais" }],
   creator: "Comércios Locais",
+  icons: {
+    icon: "/favicon.svg",
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -43,8 +48,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     siteName: "Comércios Locais",
-    title: "Comércios Locais – Águas Mornas, SC",
+    title:
+      "Comércios Locais - O marketplace de proximidade de Águas Mornas e região, SC.",
     description: "O marketplace de proximidade de Águas Mornas e região, SC.",
+    images: [
+      {
+        url: '/og-image.png', // Crie uma imagem de 1200x630 com o seu logo e o nome da cidade
+        width: 1200,
+        height: 630,
+        alt: 'Comércios Locais - Marketplace de Águas Mornas',
+      },
+    ],
   },
   robots: {
     index: true,
