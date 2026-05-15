@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sliders } from "lucide-react";
+import { Sliders, ChevronLeft, ChevronRight } from "lucide-react";
 import FilterSidebar from "@/components/filters/FilterSidebar";
 import FilterModal from "@/components/filters/FilterModal";
 import BusinessCard from "@/components/BusinessCard";
@@ -45,6 +45,9 @@ export default function CategoryContent({
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+  const itemsPerPage = 10;
 
   // Fetch businesses from API route on component mount
   useEffect(() => {
@@ -54,8 +57,8 @@ export default function CategoryContent({
         setError(null);
 
         const params = new URLSearchParams({
-          page: "1",
-          limit: "10",
+          page: currentPage.toString(),
+          limit: itemsPerPage.toString(),
           slug,
           category: categoryName,
         });
@@ -71,6 +74,7 @@ export default function CategoryContent({
         const data = await response.json();
         const fetchedBusinesses = Array.isArray(data?.data) ? data.data : [];
         setBusinesses(fetchedBusinesses);
+        setTotalResults(data?.total || 0);
 
         console.log(data?.neighborhoods, "uniqueNeighborhoods");
         setNeighborhoods(data?.neighborhoods || []);
@@ -88,7 +92,12 @@ export default function CategoryContent({
     };
 
     fetchBusinesses();
-  }, [slug, categoryName]);
+  }, [slug, categoryName, currentPage]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedSegment, selectedNeighborhood]);
 
   const filteredBusinesses = businesses.filter((business) => {
     if (selectedSegment && business.segment !== selectedSegment) return false;
@@ -103,6 +112,8 @@ export default function CategoryContent({
     }
     return true;
   });
+
+  const totalPages = Math.ceil(totalResults / itemsPerPage);
 
   return (
     <>
@@ -152,11 +163,10 @@ export default function CategoryContent({
                   {/* Results Header */}
                   <div className="mb-8">
                     <p className="text-stone-600 text-sm">
-                      {filteredBusinesses.length}{" "}
-                      {filteredBusinesses.length === 1
-                        ? "resultado"
-                        : "resultados"}{" "}
-                      encontrado{filteredBusinesses.length !== 1 ? "s" : ""}
+                      Mostrando {(currentPage - 1) * itemsPerPage + 1} a{" "}
+                      {Math.min(currentPage * itemsPerPage, totalResults)} de{" "}
+                      {totalResults}{" "}
+                      {totalResults === 1 ? "resultado" : "resultados"}
                       {selectedSegment && ` em ${selectedSegment}`}
                       {selectedNeighborhood &&
                         ` no bairro ${selectedNeighborhood}`}
@@ -173,6 +183,60 @@ export default function CategoryContent({
                       />
                     ))}
                   </div>
+
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="mt-12 flex flex-col items-center gap-6">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                          }
+                          disabled={currentPage === 1}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                          Anterior
+                        </button>
+
+                        <div className="flex items-center gap-1">
+                          {Array.from(
+                            { length: totalPages },
+                            (_, i) => i + 1,
+                          ).map((page) => (
+                            <button
+                              key={page}
+                              onClick={() => setCurrentPage(page)}
+                              className={`w-10 h-10 rounded-lg font-semibold transition-colors ${
+                                currentPage === page
+                                  ? "bg-emerald-600 text-white"
+                                  : "border border-stone-200 text-stone-700 hover:bg-stone-50"
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            setCurrentPage((prev) =>
+                              Math.min(prev + 1, totalPages),
+                            )
+                          }
+                          disabled={currentPage === totalPages}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
+                        >
+                          Próxima
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <p className="text-sm text-stone-600">
+                        Página {currentPage} de {totalPages}
+                      </p>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="text-center py-16">

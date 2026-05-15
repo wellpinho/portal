@@ -186,8 +186,8 @@ export default async function CategoryPage({
                   {categoryConfig.name}
                 </h1>
                 <p className="text-stone-600 mt-1">
-                  Explore os melhores {categoryConfig.name.toLowerCase()} em{" "}
-                  {cityConfig.name}
+                  O seu guia definitivo de {categoryConfig.name.toLowerCase()}{" "}
+                  em {cityConfig.name}
                 </p>
               </div>
             </div>
