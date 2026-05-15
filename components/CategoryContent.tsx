@@ -115,6 +115,20 @@ export default function CategoryContent({
 
   const totalPages = Math.ceil(totalResults / itemsPerPage);
 
+  const getPaginationPages = () => {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    // Sempre mostra: primeira, anterior, atual, próxima, última
+    const pages: number[] = [1];
+    if (currentPage > 2) pages.push(currentPage - 1);
+    if (currentPage !== 1 && currentPage !== totalPages)
+      pages.push(currentPage);
+    if (currentPage < totalPages - 1) pages.push(currentPage + 1);
+    pages.push(totalPages);
+    return [...new Set(pages)].sort((a, b) => a - b);
+  };
+
   return (
     <>
       {/* Desktop and Mobile Layout */}
@@ -144,8 +158,8 @@ export default function CategoryContent({
           </div>
 
           {/* Content Section */}
-          <section className="py-12 sm:py-16 bg-stone-50">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <section className="py-8 sm:py-12 lg:py-16 bg-stone-50">
+            <div className="mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
               {isLoading ? (
                 <div className="text-center py-16">
                   <p className="text-lg text-stone-600">
@@ -174,7 +188,7 @@ export default function CategoryContent({
                   </div>
 
                   {/* Business Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                     {filteredBusinesses.map((business, index) => (
                       <BusinessCard
                         key={business.id}
@@ -186,35 +200,41 @@ export default function CategoryContent({
 
                   {/* Pagination Controls */}
                   {totalPages > 1 && (
-                    <div className="mt-12 flex flex-col items-center gap-6">
-                      <div className="flex items-center gap-2">
+                    <div className="mt-12 flex flex-col items-center gap-4">
+                      <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
                         <button
                           onClick={() =>
                             setCurrentPage((prev) => Math.max(prev - 1, 1))
                           }
                           disabled={currentPage === 1}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
+                          className="inline-flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
                         >
-                          <ChevronLeft className="w-4 h-4" />
-                          Anterior
+                          <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span className="hidden sm:inline">Anterior</span>
                         </button>
 
-                        <div className="flex items-center gap-1">
-                          {Array.from(
-                            { length: totalPages },
-                            (_, i) => i + 1,
-                          ).map((page) => (
-                            <button
-                              key={page}
-                              onClick={() => setCurrentPage(page)}
-                              className={`w-10 h-10 rounded-lg font-semibold transition-colors ${
-                                currentPage === page
-                                  ? "bg-emerald-600 text-white"
-                                  : "border border-stone-200 text-stone-700 hover:bg-stone-50"
-                              }`}
+                        <div className="flex items-center gap-0.5 sm:gap-1">
+                          {getPaginationPages().map((page, idx, arr) => (
+                            <div
+                              key={`page-${page}`}
+                              className="flex items-center gap-0.5 sm:gap-1"
                             >
-                              {page}
-                            </button>
+                              {idx > 0 && arr[idx - 1] + 1 < page && (
+                                <span className="text-stone-400 text-xs">
+                                  •••
+                                </span>
+                              )}
+                              <button
+                                onClick={() => setCurrentPage(page)}
+                                className={`w-7 h-7 sm:w-10 sm:h-10 text-xs sm:text-base rounded-lg font-semibold transition-colors flex-shrink-0 ${
+                                  currentPage === page
+                                    ? "bg-emerald-600 text-white"
+                                    : "border border-stone-200 text-stone-700 hover:bg-stone-50"
+                                }`}
+                              >
+                                {page}
+                              </button>
+                            </div>
                           ))}
                         </div>
 
@@ -225,14 +245,14 @@ export default function CategoryContent({
                             )
                           }
                           disabled={currentPage === totalPages}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
+                          className="inline-flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg border border-stone-200 text-stone-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-colors"
                         >
-                          Próxima
-                          <ChevronRight className="w-4 h-4" />
+                          <span className="hidden sm:inline">Próxima</span>
+                          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                         </button>
                       </div>
 
-                      <p className="text-sm text-stone-600">
+                      <p className="text-xs sm:text-sm text-stone-600">
                         Página {currentPage} de {totalPages}
                       </p>
                     </div>
