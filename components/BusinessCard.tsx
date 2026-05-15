@@ -53,7 +53,7 @@ export default function BusinessCard({
       {/* Image */}
       <div className="relative aspect-video w-full bg-stone-100">
         <Image
-          src={avatar}
+          src={avatar || "/placeholder.png"}
           alt={businessName}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
