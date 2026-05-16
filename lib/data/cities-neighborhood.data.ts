@@ -86,4 +86,43 @@ export const REGISTERED_CITIES: Record<string, CidadeConfig> = {
       // Adicione os outros bairros da cidade aqui de forma estática
     ],
   },
+  // "rancho-queimado": {
+  //   id: 3,
+  //   name: "Rancho Queimado",
+  //   slug: "rancho-queimado",
+  //   bairros: [
+  //     { id: 1, name: "Centro", slug: "centro-rancho-queimado-sc" },
+  //     {
+  //       id: 2,
+  //       name: "Vila Nova",
+  //       slug: "vila-nova-rancho-queimado-sc",
+  //     },
+  //     {
+  //       id: 3,
+  //       name: "Vargem Grande",
+  //       slug: "vargem-grande-rancho-queimado-sc",
+  //     },
+  //     {
+  //       id: 4,
+  //       name: "Santa Cruz da Figueira",
+  //       slug: "santa-cruz-da-figueira-rancho-queimado-sc",
+  //     },
+  //     {
+  //       id: 5,
+  //       name: "Fazenda do Sacramento",
+  //       slug: "fazenda-do-sacramento-rancho-queimado-sc",
+  //     },
+  //     {
+  //       id: 6,
+  //       name: "Fazenda da Ressurreição",
+  //       slug: "fazenda-da-ressurreicao-rancho-queimado-sc",
+  //     },
+  //     {
+  //       id: 7,
+  //       name: "Área Rural",
+  //       slug: "area-rural-rancho-queimado-sc",
+  //     },
+  //     // Adicione os outros bairros da cidade aqui de forma estática
+  //   ],
+  // },
 };

@@ -23,11 +23,11 @@ export default function CardVagaDisponivel({ cityName }: { cityName: string }) {
         />
       </div>
 
-      <span className="text-xs font-semibold text-gray-400 bg-gray-200/60 px-2 py-1 rounded-md uppercase tracking-wider group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
+      <span className="text-xs font-semibold text-gray-500 bg-gray-200/60 px-2 py-1 rounded-md uppercase tracking-wider group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
         Vaga Disponível
       </span>
 
-      <p className="text-xs text-gray-400 text-center mt-2 px-4 group-hover:text-emerald-800">
+      <p className="text-sm md:text-xs text-gray-400 text-center mt-2 px-4 group-hover:text-emerald-800">
         Apareça em destaque na nossa página principal e seja visto por toda a
         cidade de {cityName}. <br />{" "}
         <strong className="text-gray-500 group-hover:text-emerald-800">

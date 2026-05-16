@@ -15,26 +15,28 @@ export const viewport: Viewport = {
   themeColor: "#059669",
 };
 
+const SITE_URL = "https://comercioslocais.com.br";
+
 export const metadata: Metadata = {
   title: {
     default: "Comércios Locais",
     template: "%s | Comércios Locais",
   },
   description:
-    "Encontre os melhores comércios, serviços e produtos coloniais de Águas Mornas e região. O marketplace de proximidade da sua cidade.",
+    "Encontre os melhores comércios, serviços e produtos coloniais da nossa região. O marketplace de proximidade da sua cidade.",
   keywords: [
     "comércios locais",
     "Águas Mornas",
+    "Santo Amaro da Imperatriz",
     "Santa Catarina",
     "produtos coloniais",
     "serviços",
     "gastronomia",
     "marketplace",
-    "produtos coloniais",
-    "gastronomia",
   ],
   authors: [{ name: "Comércios Locais" }],
   creator: "Comércios Locais",
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: "/favicon.svg",
   },
@@ -48,15 +50,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     siteName: "Comércios Locais",
-    title:
-      "Comércios Locais - O marketplace de proximidade de Águas Mornas e região, SC.",
-    description: "O marketplace de proximidade de Águas Mornas e região, SC.",
+    title: "Comércios Locais - O marketplace de proximidade da sua cidade",
+    description:
+      "Encontre e apoie os melhores negócios, prestadores de serviço e produtos coloniais perto de você.",
     images: [
       {
-        url: '/og-image.png', // Crie uma imagem de 1200x630 com o seu logo e o nome da cidade
+        url: `${SITE_URL}/pwa-pin-green.png`,
         width: 1200,
         height: 630,
-        alt: 'Comércios Locais - Marketplace de Águas Mornas',
+        alt: "Comércios Locais - O marketplace de proximidade da sua cidade",
       },
     ],
   },

@@ -183,6 +183,32 @@ export const CITY_CONFIGS: CityConfig[] = [
     founded: 1900,
   },
   {
+    id: "rancho-queimado-sc",
+    slug: "rancho-queimado",
+    state: "SC",
+    name: "Rancho Queimado",
+    displayName: "Rancho Queimado, SC",
+    heroTitle: "Seu guia de comércios e serviços em Rancho Queimado",
+    heroSubtitle: "Conectando você aos melhores negócios locais",
+    heroImageUrl: "/banner.png",
+    description:
+      "Rancho Queimado é uma comunidade vibrante com forte tradição de comércio e artesanato local.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1511306228054-480b3b290ffa?w=500&h=300&fit=crop",
+    featuredCategories: [
+      FEATURED_CATEGORIES.gastronomy,
+      FEATURED_CATEGORIES.services,
+      FEATURED_CATEGORIES.retail,
+      FEATURED_CATEGORIES.tourism,
+      FEATURED_CATEGORIES.imobiliaria_lar,
+      FEATURED_CATEGORIES.casa_construcao,
+      FEATURED_CATEGORIES.saude_beleza,
+      FEATURED_CATEGORIES.agro_coloniais,
+    ],
+    population: 5200,
+    founded: 1900,
+  },
+  {
     id: "brusque-sc",
     slug: "brusque",
     state: "SC",

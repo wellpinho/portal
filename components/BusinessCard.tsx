@@ -64,16 +64,11 @@ export default function BusinessCard({
 
         {/* Featured badge */}
         {isFeatured && (
-          <span className="absolute top-2 right-2 flex items-center gap-1 bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">
+          <span className="absolute top-2 right-2 flex items-center gap-1 bg-amber-400 text-amber-900 text-xs font-semibold px-2 py-0.5 rounded-full shadow-sm">
             <Crown className="w-3 h-3" aria-hidden="true" strokeWidth={3} />
-            Premium
+            Comércio Parceiro
           </span>
         )}
-
-        {/* Segment badge */}
-        <span className="absolute top-2 left-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-violet-600 text-white">
-          {badgeSegment}
-        </span>
       </div>
 
       {/* Content */}

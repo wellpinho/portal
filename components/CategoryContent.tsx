@@ -1,12 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sliders, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Sliders,
+  ChevronLeft,
+  ChevronRight,
+  MessageCircleMore,
+} from "lucide-react";
 import FilterSidebar from "@/components/filters/FilterSidebar";
 import FilterModal from "@/components/filters/FilterModal";
 import BusinessCard from "@/components/BusinessCard";
 import { Business } from "@/lib/types";
 import { REGISTERED_CITIES } from "@/lib/data/cities-neighborhood.data";
+import { handleShareWhatsapp } from "@/utils/share-whatsapp.utils";
 
 // Função para sanitizar texto: converter "Área Rural" em "area-rural"
 const sanitizeNeighborhood = (text: string): string => {
@@ -263,14 +269,21 @@ export default function CategoryContent({
                 </>
               ) : (
                 <div className="text-center py-16">
-                  <p className="text-lg text-stone-600 mb-6">
-                    Nenhum comércio encontrado com os filtros selecionados.
-                  </p>
+                  <div className="max-w-4xl mx-auto">
+                    <p className="text-lg text-stone-700 mb-6">
+                      Ainda não temos comércios cadastrados neste setor.
+                    </p>
+                    <span className="block mb-6 text-sm text-stone-500">
+                      Que tal nos indicar para os seus amigos e comércios
+                      favoritos? Ajude a movimentar a nossa região!
+                    </span>
+                  </div>
                   <button
-                    onClick={() => setIsFilterModalOpen(true)}
-                    className="inline-block px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
+                    onClick={handleShareWhatsapp}
+                    className="inline-flex cursor-pointer items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
                   >
-                    Ajustar filtros
+                    <MessageCircleMore className="w-5 h-5 inline-block mr-2" />
+                    Enviar para amigos
                   </button>
                 </div>
               )}

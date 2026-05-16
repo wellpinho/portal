@@ -8,11 +8,13 @@ import {
   CreditCard,
   MapPinned,
   MessageCircle,
+  Motorbike,
 } from "lucide-react";
 import BusinessGallery from "@/components/BusinessGallery";
 import Header from "@/components/Header";
 import { getBusinessBySlug } from "@/lib/mock-data";
 import { DEFAULT_CITY_PATH } from "@/lib/locations";
+import { generateMapsLink } from "@/lib/generateGoogleMapLink.lib";
 
 type AdvertiserPageProps = {
   params: Promise<{ slug: string }>;
@@ -44,6 +46,14 @@ export async function generateMetadata({
 export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
   const { slug } = await params;
   const business = getBusinessBySlug(slug);
+  const googleMapsUrl = business
+    ? generateMapsLink(
+        business.businessName,
+        business.address.street,
+        business.address.city,
+        business.address.state,
+      )
+    : "";
 
   if (!business) {
     return (
@@ -120,25 +130,25 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
           </p>
         </section>
 
-        <section className="px-4 mt-6">
-          <a
-            href={business.mapUrl}
+        <section className="flex flex-col md:flex-row px-4 mt-6 gap-2">
+          <Link
+            href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold py-3 px-4 touch-manipulation"
           >
             <MapPinned className="w-4 h-4" aria-hidden="true" />
             Como chegar
-          </a>
-          <a
+          </Link>
+          <Link
             href={`https://wa.me/${business.businessWhatsapp}?text=Ola! Encontrei ${business.businessName} no Comercios Locais e gostaria de mais informacoes.`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-3 px-4 touch-manipulation"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-3 px-4 touch-manipulation"
           >
             <MessageCircle className="w-4 h-4" aria-hidden="true" />
             Falar no WhatsApp
-          </a>
+          </Link>
         </section>
 
         <section className="px-4 mt-6 grid sm:grid-cols-2 gap-3">
@@ -166,17 +176,30 @@ export default async function AdvertiserPage({ params }: AdvertiserPageProps) {
             </ul>
           </article>
 
-          <article className="bg-white rounded-2xl border border-stone-200 p-4 sm:col-span-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold text-stone-800">
-              <Car className="w-4 h-4 text-emerald-600" />
-              Estacionamento
-            </h3>
-            <p className="mt-2 text-sm text-stone-600">
-              {business.hasParking
-                ? "Sim, possui estacionamento para clientes."
-                : "Não possui estacionamento próprio."}
-            </p>
-          </article>
+          <div className="flex w-full flex-col sm:flex-row gap-3">
+            <article className="bg-white rounded-2xl border border-stone-200 p-4 sm:col-span-2">
+              <h3 className="flex items-center gap-2 text-sm font-bold text-stone-800">
+                <Car className="w-4 h-4 text-emerald-600" />
+                Estacionamento
+              </h3>
+              <p className="mt-2 text-sm text-stone-600">
+                {business.hasParking
+                  ? "Sim, possui estacionamento para clientes."
+                  : "Não possui estacionamento próprio."}
+              </p>
+            </article>
+            <article className="bg-white rounded-2xl border border-stone-200 p-4 sm:col-span-2">
+              <h3 className="flex items-center gap-2 text-sm font-bold text-stone-800">
+                <Motorbike className="w-4 h-4 text-emerald-600" />
+                Delivery
+              </h3>
+              <p className="mt-2 text-sm text-stone-600">
+                {business.hasDelivery
+                  ? "Sim, oferece serviço de delivery."
+                  : "Não oferece serviço de delivery."}
+              </p>
+            </article>
+          </div>
         </section>
       </main>
     </div>
