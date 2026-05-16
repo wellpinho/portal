@@ -286,7 +286,7 @@ export default function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-50 antialiased shadow-md border-b-4 border-stone-200 bg-white">
+      <header className="sticky top-0 z-50 antialiased shadow-md">
         {/* ── Green main bar ── */}
         <div className="h-14 bg-emerald-700 text-white">
           <div className="max-w-2xl mx-auto h-full px-4 flex items-center justify-between gap-3">
@@ -308,8 +308,49 @@ export default function Header({
             </Link>
           </div>
         </div>
-
         {/* ── Secondary location bar ── */}
+        <div className="bg-white border-b border-stone-200">
+          <div className="max-w-2xl mx-auto px-4 py-2">
+            {/* Mobile: unified button → opens drawer */}
+            <button
+              onClick={() => setDrawerOpen(true)}
+              className="sm:hidden w-full flex items-center gap-2.5 bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 text-left transition-all active:scale-[0.98] active:bg-slate-200"
+              aria-label="Filtrar por cidade e bairro"
+              aria-expanded={drawerOpen}
+              aria-haspopup="dialog"
+            >
+              <MapPin
+                className="w-4 h-4 text-emerald-600 shrink-0"
+                aria-hidden="true"
+              />
+              <span className="flex-1 min-w-0 text-sm font-medium text-stone-700 truncate antialiased">
+                {locationLabel}
+              </span>
+              <ChevronDown
+                className="w-4 h-4 text-stone-400 shrink-0"
+                aria-hidden="true"
+              />
+            </button>
+
+            {/* Desktop: two inline custom dropdowns */}
+            <div className="hidden sm:flex items-stretch border border-stone-200 rounded-xl bg-white">
+              <div className="flex flex-1 items-center gap-2 px-3 border-r border-stone-200 hover:bg-stone-50 transition-colors">
+                <MapPin
+                  className="w-3.5 h-3.5 text-emerald-600 shrink-0 pointer-events-none"
+                  aria-hidden="true"
+                />
+                <CustomSelect
+                  value={`${activeCity.uf}|${activeCity.citySlug}`}
+                  onChange={handleChangeCity}
+                  ariaLabel="Selecionar cidade"
+                  options={cityOptions}
+                  buttonClassName="flex w-full items-center justify-between gap-2 py-3 text-sm font-medium text-stone-700 outline-none"
+                  menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </header>
 
       {/* ── Mobile bottom drawer ── */}
@@ -317,7 +358,7 @@ export default function Header({
         <div className="sm:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-50 bg-black/40"
+            className="fixed inset-0 z-40 bg-black/40 animate-fade-in"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
@@ -327,7 +368,7 @@ export default function Header({
             role="dialog"
             aria-modal="true"
             aria-label="Filtrar localização"
-            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl min-h-[25vh] overflow-y-auto animate-slide-up"
           >
             {/* Drag handle */}
             <div className="flex justify-center pt-2.5 pb-1">
@@ -350,7 +391,7 @@ export default function Header({
 
             {/* Selects */}
             <div className="px-4 pb-10 space-y-3">
-              <div className="flex items-center gap-3 border border-stone-200 rounded-xl px-3 bg-white hover:bg-stone-50 transition-colors">
+              <div className="flex items-center gap-3 border border-stone-200 rounded-xl px-3 bg-white hover:bg-stone-50 transition-colors relative">
                 <MapPin
                   className="w-4 h-4 text-emerald-600 shrink-0 pointer-events-none"
                   aria-hidden="true"
@@ -361,22 +402,7 @@ export default function Header({
                   ariaLabel="Selecionar cidade"
                   options={cityOptions}
                   buttonClassName="flex w-full items-center justify-between gap-2 py-3.5 text-base font-medium text-stone-800 outline-none"
-                  menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
-                />
-              </div>
-
-              <div className="flex items-center gap-3 border border-stone-200 rounded-xl px-3 bg-white hover:bg-stone-50 transition-colors">
-                <Building2
-                  className="w-4 h-4 text-emerald-600 shrink-0 pointer-events-none"
-                  aria-hidden="true"
-                />
-                <CustomSelect
-                  value={selectedNeighborhood}
-                  onChange={handleChangeNeighborhood}
-                  ariaLabel="Selecionar bairro"
-                  options={neighborhoodOptions}
-                  buttonClassName="flex w-full items-center justify-between gap-2 py-3.5 text-base font-medium text-stone-800 outline-none"
-                  menuClassName="absolute left-0 right-0 bottom-[calc(100%+0.35rem)] z-70 max-h-64 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
+                  menuClassName="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-70 max-h-48 overflow-y-auto rounded-xl border border-stone-200 bg-white p-1.5 shadow-xl"
                 />
               </div>
             </div>

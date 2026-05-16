@@ -157,19 +157,18 @@ export const CITY_CONFIGS: CityConfig[] = [
     founded: 1852,
   },
   {
-    id: "santo-amaro-sc",
-    slug: "santo-amaro",
+    id: "santo-amaro-da-imperatriz-sc",
+    slug: "santo-amaro-da-imperatriz-sc",
     state: "SC",
-    name: "Santo Amaro",
-    displayName: "Santo Amaro, SC",
-    heroTitle: "Descubra o Comércio Local de Santo Amaro",
+    name: "Santo Amaro da Imperatriz",
+    displayName: "Santo Amaro da Imperatriz, SC",
+    heroTitle: "Seu guia de comércios e serviços em Santo Amaro da Imperatriz",
     heroSubtitle: "Conectando você aos melhores negócios locais",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1494783367193-149034c05e41?w=1200&h=500&fit=crop",
+    heroImageUrl: "/banner.png",
     description:
-      "Santo Amaro é uma comunidade vibrante com forte tradição de comércio e artesanato local.",
+      "Santo Amaro da Imperatriz é uma comunidade vibrante com forte tradição de comércio e artesanato local.",
     imageUrl:
-      "https://images.unsplash.com/photo-1494783367193-149034c05e41?w=500&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1511306228054-480b3b290ffa?w=500&h=300&fit=crop",
     featuredCategories: [
       FEATURED_CATEGORIES.gastronomy,
       FEATURED_CATEGORIES.services,
