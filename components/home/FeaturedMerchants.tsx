@@ -20,8 +20,8 @@ export default function FeaturedMerchants({
             Destaques de {cityName} <br />
           </h2>
           <p className="text-stone-600 text-lg">
-            Seja o parceiro oficial do Comércios Locais na sua região e ganhe
-            destaque exclusivo para milhares de clientes.
+            Seja um parceiro oficial e garanta um espaço exclusivo na vitrine da
+            sua cidade.
           </p>
         </div>
 
