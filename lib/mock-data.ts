@@ -66,6 +66,7 @@ export const MOCK_BUSINESSES: Business[] = [
     ],
     paymentMethods: ["Pix", "Dinheiro", "Cartão de Débito"],
     hasParking: true,
+    hasDelivery: false,
   },
   {
     id: "2",
@@ -103,6 +104,7 @@ export const MOCK_BUSINESSES: Business[] = [
     ],
     paymentMethods: ["Pix", "Dinheiro", "Cartão de Crédito"],
     hasParking: false,
+    hasDelivery: false,
   },
   {
     id: "3",
@@ -141,6 +143,7 @@ export const MOCK_BUSINESSES: Business[] = [
       "Cartão de Crédito",
     ],
     hasParking: true,
+    hasDelivery: false,
   },
   {
     id: "4",
@@ -183,6 +186,7 @@ export const MOCK_BUSINESSES: Business[] = [
       "Cartão de Crédito",
     ],
     hasParking: true,
+    hasDelivery: false,
   },
   {
     id: "5",
@@ -220,6 +224,7 @@ export const MOCK_BUSINESSES: Business[] = [
     ],
     paymentMethods: ["Pix", "Dinheiro", "Cartão de Débito"],
     hasParking: false,
+    hasDelivery: true,
   },
   {
     id: "6",
@@ -262,6 +267,7 @@ export const MOCK_BUSINESSES: Business[] = [
       "Cartão de Crédito",
     ],
     hasParking: true,
+    hasDelivery: true,
   },
   {
     id: "7",
@@ -295,6 +301,7 @@ export const MOCK_BUSINESSES: Business[] = [
     workingHours: ["Segunda a Sábado: 11:00 - 15:00", "Domingo: Fechado"],
     paymentMethods: ["Pix", "Dinheiro", "Cartão de Débito"],
     hasParking: true,
+    hasDelivery: false,
   },
   {
     id: "8",
@@ -328,6 +335,7 @@ export const MOCK_BUSINESSES: Business[] = [
     workingHours: ["Atendimento diário: 07:00 - 22:00"],
     paymentMethods: ["Pix", "Dinheiro", "Cartão de Crédito"],
     hasParking: true,
+    hasDelivery: false,
   },
   {
     id: "9",
@@ -365,6 +373,7 @@ export const MOCK_BUSINESSES: Business[] = [
     ],
     paymentMethods: ["Pix", "Dinheiro", "Cartão de Débito"],
     hasParking: true,
+    hasDelivery: false,
   },
   {
     id: "10",
@@ -398,6 +407,7 @@ export const MOCK_BUSINESSES: Business[] = [
     workingHours: ["Sábado: 07:00 - 12:30"],
     paymentMethods: ["Pix", "Dinheiro"],
     hasParking: false,
+    hasDelivery: false,
   },
 ];
 

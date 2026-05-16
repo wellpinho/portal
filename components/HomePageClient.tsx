@@ -135,6 +135,7 @@ function toBusinessList(data: unknown): Business[] {
       workingHours: ["Horário não informado"],
       paymentMethods: ["Pix"],
       hasParking: false,
+      hasDelivery: false,
     };
   });
 }

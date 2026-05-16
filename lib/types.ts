@@ -43,4 +43,5 @@ export interface Business {
   workingHours: string[];
   paymentMethods: string[];
   hasParking: boolean;
+  hasDelivery: boolean;
 }
