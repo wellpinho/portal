@@ -10,7 +10,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { MapPin, Building2, ChevronDown, X, Megaphone } from "lucide-react";
+import { MapPin, ChevronDown, X, Megaphone } from "lucide-react";
 import {
   CityRoute,
   DEFAULT_CITY_ROUTE,
@@ -225,6 +225,7 @@ export default function Header({
   const router = useRouter();
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [renderKey, setRenderKey] = useState(0);
 
   const pathnameParts = pathname.split("/").filter(Boolean);
   const routeCity =
@@ -234,6 +235,16 @@ export default function Header({
 
   const activeCity = currentCity ?? routeCity ?? DEFAULT_CITY_ROUTE;
 
+  // Compute selected city value and force re-render when route changes
+  const selectedCityValue = useMemo(
+    () => `${activeCity.uf.toLowerCase()}|${activeCity.citySlug.toLowerCase()}`,
+    [activeCity.uf, activeCity.citySlug],
+  );
+
+  useEffect(() => {
+    setRenderKey((prev) => prev + 1);
+  }, [pathname]);
+
   function handleChangeCity(value: string) {
     const [uf, citySlug] = value.split("|");
     const nextPath = toCityPath(uf, citySlug);
@@ -242,18 +253,9 @@ export default function Header({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: nextPath }),
     });
+    setDrawerOpen(false);
     router.push(nextPath);
-    setDrawerOpen(false);
-  }
-
-  function handleChangeNeighborhood(value: string) {
-    const params = new URLSearchParams();
-    if (value !== "Todos os bairros") {
-      params.set("bairro", value);
-    }
-    const query = params.toString();
-    router.push(`${pathname}${query ? `?${query}` : ""}`);
-    setDrawerOpen(false);
+    router.refresh();
   }
 
   const cityOptions = useMemo<SelectOption[]>(
@@ -264,20 +266,6 @@ export default function Header({
       })),
     [],
   );
-
-  const neighborhoodOptions = useMemo<SelectOption[]>(() => {
-    // Obter bairros da cidade selecionada do REGISTERED_CITIES
-    const cityData = REGISTERED_CITIES[activeCity.citySlug];
-    const bairros = cityData?.bairros ?? [];
-
-    return [
-      { value: "Todos os bairros", label: "Todos os bairros" },
-      ...bairros.map((bairro) => ({
-        value: bairro.name,
-        label: bairro.name,
-      })),
-    ];
-  }, [activeCity.citySlug]);
 
   const locationLabel =
     selectedNeighborhood === "Todos os bairros"
@@ -334,13 +322,14 @@ export default function Header({
 
             {/* Desktop: two inline custom dropdowns */}
             <div className="hidden sm:flex items-stretch border border-stone-200 rounded-xl bg-white">
-              <div className="flex flex-1 items-center gap-2 px-3 border-r border-stone-200 hover:bg-stone-50 transition-colors">
+              <div className="flex flex-1 items-center gap-2 px-3  transition-colors">
                 <MapPin
                   className="w-3.5 h-3.5 text-emerald-600 shrink-0 pointer-events-none"
                   aria-hidden="true"
                 />
                 <CustomSelect
-                  value={`${activeCity.uf}|${activeCity.citySlug}`}
+                  key={`city-select-${renderKey}`}
+                  value={selectedCityValue}
                   onChange={handleChangeCity}
                   ariaLabel="Selecionar cidade"
                   options={cityOptions}
@@ -397,7 +386,8 @@ export default function Header({
                   aria-hidden="true"
                 />
                 <CustomSelect
-                  value={`${activeCity.uf}|${activeCity.citySlug}`}
+                  key={`city-select-mobile-${renderKey}`}
+                  value={selectedCityValue}
                   onChange={handleChangeCity}
                   ariaLabel="Selecionar cidade"
                   options={cityOptions}

@@ -47,10 +47,10 @@ export const REGISTERED_CITIES: Record<string, CidadeConfig> = {
       // Adicione os outros bairros da cidade aqui de forma estática
     ],
   },
-  "santo-amaro-da-imperatriz-sc": {
+  "santo-amaro-da-imperatriz": {
     id: 2,
     name: "Santo Amaro da Imperatriz",
-    slug: "santo-amaro-da-imperatriz-sc",
+    slug: "santo-amaro-da-imperatriz",
     bairros: [
       { id: 1, name: "Centro", slug: "centro-santo-amaro-da-imperatriz-sc" },
       {
