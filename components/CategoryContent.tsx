@@ -6,6 +6,7 @@ import FilterSidebar from "@/components/filters/FilterSidebar";
 import FilterModal from "@/components/filters/FilterModal";
 import BusinessCard from "@/components/BusinessCard";
 import { Business } from "@/lib/types";
+import { REGISTERED_CITIES } from "@/lib/data/cities-neighborhood.data";
 
 // Função para sanitizar texto: converter "Área Rural" em "area-rural"
 const sanitizeNeighborhood = (text: string): string => {
@@ -56,6 +57,11 @@ export default function CategoryContent({
         setIsLoading(true);
         setError(null);
 
+        // Obter bairros do REGISTERED_CITIES
+        const cityData = REGISTERED_CITIES[city];
+        const bairros = cityData?.bairros ?? [];
+        setNeighborhoods(bairros.map((b) => b.name));
+
         const params = new URLSearchParams({
           page: currentPage.toString(),
           limit: itemsPerPage.toString(),
@@ -75,9 +81,6 @@ export default function CategoryContent({
         const fetchedBusinesses = Array.isArray(data?.data) ? data.data : [];
         setBusinesses(fetchedBusinesses);
         setTotalResults(data?.total || 0);
-
-        console.log(data?.neighborhoods, "uniqueNeighborhoods");
-        setNeighborhoods(data?.neighborhoods || []);
       } catch (err) {
         console.error("Erro ao buscar negócios:", err);
         setError(
@@ -92,7 +95,7 @@ export default function CategoryContent({
     };
 
     fetchBusinesses();
-  }, [slug, categoryName, currentPage]);
+  }, [slug, categoryName, currentPage, city]);
 
   // Reset to first page when filters change
   useEffect(() => {

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { CityConfig } from "@/lib/data/cities";
 
 interface CityHeroProps {

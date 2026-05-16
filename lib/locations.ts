@@ -1,23 +1,19 @@
+import { REGISTERED_CITIES } from "./data/cities-neighborhood.data";
+
 export interface CityRoute {
   uf: string;
   citySlug: string;
   cityName: string;
 }
 
-export const SUPPORTED_CITY_ROUTES: CityRoute[] = [
-  { uf: "sc", citySlug: "aguas-mornas", cityName: "Águas Mornas" },
-  // {
-  //   uf: "sc",
-  //   citySlug: "santo-amaro-da-imperatriz",
-  //   cityName: "Santo Amaro da Imperatriz",
-  // },
-  // {
-  //   uf: "sc",
-  //   citySlug: "sao-pedro-de-alcantara",
-  //   cityName: "São Pedro de Alcântara",
-  // },
-  // { uf: "sc", citySlug: "palhoca", cityName: "Palhoça" },
-];
+// Gera rotas de cidades a partir do REGISTERED_CITIES
+export const SUPPORTED_CITY_ROUTES: CityRoute[] = Object.values(
+  REGISTERED_CITIES,
+).map((city) => ({
+  uf: "sc",
+  citySlug: city.slug,
+  cityName: city.name,
+}));
 
 export const DEFAULT_CITY_ROUTE: CityRoute = SUPPORTED_CITY_ROUTES[0];
 
